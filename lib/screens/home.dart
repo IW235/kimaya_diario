@@ -18,20 +18,32 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final s = widget.state;
+    if (_i == 0) {
+      return Scaffold(
+        body: InicioTab(
+          state: s,
+          goto: (index) => setState(() => _i = index),
+          onSettings: () => _openSettings(context, s),
+        ),
+        bottomNavigationBar: _navigationBar(),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 18,
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Diario del Bosque', style: K.title(12, color: K.paper)),
           const SizedBox(height: 4),
-          Text('Archivo de Maya · Vol. I', style: K.body(11, color: const Color(0xFFBBD7BE))),
+          Text('Archivo de Maya · Vol. I',
+              style: K.body(11, color: const Color(0xFFBBD7BE))),
         ]),
         actions: [
           IconButton(
             tooltip: 'Ajustes y créditos',
             icon: const Icon(Icons.tune),
-            onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => SettingsScreen(state: s))),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => SettingsScreen(state: s))),
           ),
           Container(
             width: 40,
@@ -48,21 +60,41 @@ class _HomeShellState extends State<HomeShell> {
         ],
       ),
       body: IndexedStack(index: _i, children: [
-        InicioTab(state: s, goto: (i) => setState(() => _i = i)),
+        const SizedBox.shrink(),
         DiarioTab(state: s),
         MundoTab(state: s),
         ArchivoTab(state: s),
       ]),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: _navigationBar(),
+    );
+  }
+
+  void _openSettings(BuildContext context, AppState state) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => SettingsScreen(state: state)),
+    );
+  }
+
+  NavigationBar _navigationBar() => NavigationBar(
         selectedIndex: _i,
         onDestinationSelected: (i) => setState(() => _i = i),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Inicio'),
-          NavigationDestination(icon: Icon(Icons.menu_book_outlined), selectedIcon: Icon(Icons.menu_book), label: 'Diario'),
-          NavigationDestination(icon: Icon(Icons.map_outlined), selectedIcon: Icon(Icons.map), label: 'Mundo'),
-          NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), selectedIcon: Icon(Icons.auto_awesome), label: 'Archivo'),
+          NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Inicio'),
+          NavigationDestination(
+              icon: Icon(Icons.menu_book_outlined),
+              selectedIcon: Icon(Icons.menu_book),
+              label: 'Diario'),
+          NavigationDestination(
+              icon: Icon(Icons.map_outlined),
+              selectedIcon: Icon(Icons.map),
+              label: 'Mundo'),
+          NavigationDestination(
+              icon: Icon(Icons.auto_awesome_outlined),
+              selectedIcon: Icon(Icons.auto_awesome),
+              label: 'Archivo'),
         ],
-      ),
-    );
-  }
+      );
 }

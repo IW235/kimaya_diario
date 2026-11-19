@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import 'content.dart';
@@ -11,6 +13,41 @@ const _covers = [
 ];
 String coverText(String key) =>
     _covers[key.codeUnits.fold<int>(0, (a, b) => a + b) % _covers.length];
+
+/// Mantiene una ilustración completa y rellena los espacios sobrantes con
+/// una extensión desenfocada de la misma imagen, sin deformar el original.
+class ArtworkBackdrop extends StatelessWidget {
+  const ArtworkBackdrop({
+    super.key,
+    required this.asset,
+    required this.child,
+  });
+
+  final String asset;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRect(
+            child: ImageFiltered(
+              imageFilter: ui.ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+              child: Transform.scale(
+                scale: 1.08,
+                child: Image.asset(
+                  asset,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.low,
+                ),
+              ),
+            ),
+          ),
+          const ColoredBox(color: Color(0x33001410)),
+          child,
+        ],
+      );
+}
 
 class PaperCard extends StatelessWidget {
   const PaperCard({super.key, required this.child, this.color, this.onTap});
@@ -48,7 +85,8 @@ class SectionTitle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(child: Text(text, style: K.title(11))),
-            if (trailing != null) Text(trailing!, style: K.body(12, color: K.muted)),
+            if (trailing != null)
+              Text(trailing!, style: K.body(12, color: K.muted)),
           ],
         ),
       );
@@ -61,8 +99,11 @@ class Pill extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-            color: const Color(0xFFDCE9D4), borderRadius: BorderRadius.circular(999)),
-        child: Text(text, style: K.body(12, color: const Color(0xFF365C47), w: FontWeight.w800)),
+            color: const Color(0xFFDCE9D4),
+            borderRadius: BorderRadius.circular(999)),
+        child: Text(text,
+            style:
+                K.body(12, color: const Color(0xFF365C47), w: FontWeight.w800)),
       );
 }
 
@@ -80,7 +121,8 @@ class MayaNote extends StatelessWidget {
             const SizedBox(height: 6),
             Text('“$text”', style: K.serif(15)),
             const SizedBox(height: 6),
-            Text('— Maya, guardiana del círculo', style: K.body(11, color: K.muted)),
+            Text('— Maya, guardiana del círculo',
+                style: K.body(11, color: K.muted)),
           ],
         ),
       );
@@ -97,14 +139,17 @@ class Cover extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: const LinearGradient(
-              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [K.bramble, K.violet]),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [K.bramble, K.violet]),
         ),
         child: Column(children: [
           const Text('🕸️', style: TextStyle(fontSize: 34)),
           const SizedBox(height: 10),
           Text('Por descubrir', style: K.title(11, color: K.rose)),
           const SizedBox(height: 10),
-          Text(text, textAlign: TextAlign.center, style: K.body(14, color: K.paper)),
+          Text(text,
+              textAlign: TextAlign.center, style: K.body(14, color: K.paper)),
         ]),
       );
 }
@@ -113,7 +158,12 @@ class Cover extends StatelessWidget {
 class RuneRow extends StatelessWidget {
   const RuneRow({super.key, required this.firstActive});
   final bool firstActive;
-  static const _runes = [('✦', 'Raíces'), ('◇', 'Laguna'), ('⌁', 'Copas'), ('❋', 'Bruma')];
+  static const _runes = [
+    ('✦', 'Raíces'),
+    ('◇', 'Laguna'),
+    ('⌁', 'Copas'),
+    ('❋', 'Bruma')
+  ];
 
   @override
   Widget build(BuildContext context) => Row(children: [
@@ -122,8 +172,12 @@ class RuneRow extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(right: i < 3 ? 8 : 0),
               child: Semantics(
-                label: 'Runa ${_runes[i].$2}, ${i == 0 && firstActive ? "despierta" : "apagada"}',
-                child: _Rune(glyph: _runes[i].$1, name: _runes[i].$2, on: i == 0 && firstActive),
+                label:
+                    'Runa ${_runes[i].$2}, ${i == 0 && firstActive ? "despierta" : "apagada"}',
+                child: _Rune(
+                    glyph: _runes[i].$1,
+                    name: _runes[i].$2,
+                    on: i == 0 && firstActive),
               ),
             ),
           ),
@@ -142,16 +196,24 @@ class _Rune extends StatelessWidget {
             color: on ? const Color(0xFFF5E3A7) : const Color(0xFFE9E0C4),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: on ? K.gold : K.line, width: on ? 2 : 1),
-            boxShadow: on ? [BoxShadow(color: K.gold.withValues(alpha: .45), blurRadius: 14)] : null,
+            boxShadow: on
+                ? [
+                    BoxShadow(
+                        color: K.gold.withValues(alpha: .45), blurRadius: 14)
+                  ]
+                : null,
           ),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(glyph,
                 style: TextStyle(
                     fontSize: 24,
-                    color: on ? const Color(0xFFA47C22) : const Color(0xFF819087))),
+                    color: on
+                        ? const Color(0xFFA47C22)
+                        : const Color(0xFF819087))),
             Text(name, style: K.body(10, color: K.muted, w: FontWeight.w700)),
             Icon(on ? Icons.check_circle : Icons.lock_outline,
-                size: 13, color: on ? const Color(0xFFA47C22) : const Color(0xFF819087)),
+                size: 13,
+                color: on ? const Color(0xFFA47C22) : const Color(0xFF819087)),
           ]),
         ),
       );
@@ -183,18 +245,22 @@ class PageTile extends StatelessWidget {
           decoration: BoxDecoration(
               color: covered ? K.violet : const Color(0xFFC5D8B7),
               borderRadius: BorderRadius.circular(10)),
-          child: Text(covered ? '🌫️' : page.emoji, style: const TextStyle(fontSize: 24)),
+          child: Text(covered ? '🌫️' : page.emoji,
+              style: const TextStyle(fontSize: 24)),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title,
-                style: K.body(15, color: covered ? K.paper : K.night, w: FontWeight.w800)),
+                style: K.body(15,
+                    color: covered ? K.paper : K.night, w: FontWeight.w800)),
             if (sub.isNotEmpty)
               Text(sub,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: K.body(12, color: covered ? const Color(0xFFD9C6E0) : K.muted)),
+                  style: K.body(12,
+                      color: covered ? const Color(0xFFD9C6E0) : K.muted)),
           ]),
         ),
         Icon(Icons.chevron_right, color: covered ? K.rose : K.moss),
@@ -206,7 +272,8 @@ class PageTile extends StatelessWidget {
 void openPage(BuildContext context, AppState state, DiaryPage page) {
   state.visit(page.key);
   Navigator.of(context).push(
-    MaterialPageRoute(builder: (_) => DetailScreen(state: state, page: state.resolve(page))),
+    MaterialPageRoute(
+        builder: (_) => DetailScreen(state: state, page: state.resolve(page))),
   );
 }
 
@@ -221,13 +288,16 @@ class DetailScreen extends StatelessWidget {
     final spoiler = state.hidden(page);
     final covered = locked || spoiler;
     final status = state.statusFor(page);
-    final heading =
-        covered && page.category == 'capitulo' ? 'Capítulo ${page.order}' : page.title;
+    final heading = covered && page.category == 'capitulo'
+        ? 'Capítulo ${page.order}'
+        : page.title;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(heading,
-            maxLines: 2, overflow: TextOverflow.ellipsis, style: K.title(11, color: K.paper)),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: K.title(11, color: K.paper)),
       ),
       body: ListView(padding: const EdgeInsets.all(18), children: [
         Center(
@@ -240,14 +310,16 @@ class DetailScreen extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: covered ? K.magenta : K.moss, width: 2),
             ),
-            child: Text(covered ? '🌫️' : page.emoji, style: const TextStyle(fontSize: 38)),
+            child: Text(covered ? '🌫️' : page.emoji,
+                style: const TextStyle(fontSize: 38)),
           ),
         ),
         const SizedBox(height: 16),
         if (covered) ...[
           Cover(coverText(page.key)),
           const SizedBox(height: 12),
-          if (locked && page.note != null) MayaNote(page.note!, label: 'Adelanto de Maya'),
+          if (locked && page.note != null)
+            MayaNote(page.note!, label: 'Adelanto de Maya'),
           if (spoiler)
             FilledButton(
               onPressed: () async {
@@ -269,7 +341,8 @@ class DetailScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: Text.rich(TextSpan(children: [
-                TextSpan(text: '${e.key}: ', style: K.body(14, w: FontWeight.w800)),
+                TextSpan(
+                    text: '${e.key}: ', style: K.body(14, w: FontWeight.w800)),
                 TextSpan(text: e.value, style: K.body(14)),
               ])),
             ),
@@ -282,7 +355,10 @@ class DetailScreen extends StatelessWidget {
             const SizedBox(height: 6),
             Text(e.key, style: K.title(10, color: K.forest)),
             const SizedBox(height: 8),
-            Wrap(spacing: 6, runSpacing: 6, children: [for (final i in e.value) Pill(i)]),
+            Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [for (final i in e.value) Pill(i)]),
             const SizedBox(height: 14),
           ],
           if (page.note != null) MayaNote(page.note!),

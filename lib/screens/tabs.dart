@@ -4,103 +4,93 @@ import '../common.dart';
 import '../content.dart';
 import '../state.dart';
 import '../theme.dart';
+import '../widgets/kimaya_art.dart';
 
 // ------------------------------------------------------------------ Inicio
 class InicioTab extends StatelessWidget {
-  const InicioTab({super.key, required this.state, required this.goto});
+  const InicioTab({
+    super.key,
+    required this.state,
+    required this.goto,
+    required this.onSettings,
+  });
   final AppState state;
   final void Function(int) goto;
+  final VoidCallback onSettings;
 
   @override
   Widget build(BuildContext context) {
     final last = state.lastPage;
     final curiosity = kCuriosities[DateTime.now().day % kCuriosities.length];
-    return ListView(padding: const EdgeInsets.all(16), children: [
-      Text('¡Qué bueno verte!', style: K.title(14)),
-      const SizedBox(height: 6),
-      Text('Maya dejó una nota nueva para ti.', style: K.body(13, color: K.muted)),
-      const SizedBox(height: 14),
-      const _Hero(),
-      const SizedBox(height: 14),
-      const MayaNote(kHomeQuote, label: 'Nota de Maya · hoy'),
-      SectionTitle('Las cuatro runas',
-          trailing: state.rescued ? '1 de 4 despierta' : '0 de 4 despiertan'),
-      RuneRow(firstActive: state.rescued),
-      if (last != null) ...[
-        const SectionTitle('Última página consultada'),
-        PageTile(page: last, state: state),
-      ],
-      const SectionTitle('Continúa explorando'),
-      PaperCard(
-        color: K.mossLight,
-        onTap: () => goto(3),
-        child: const _Row('🐾', 'Las hermanas', 'Conoce a Falin, Mia y Kiara.'),
-      ),
-      PaperCard(
-        color: K.mossLight,
-        onTap: () => openPage(context, state, state.byKey('lugar_circulo_hongos')),
-        child: const _Row('🍄', 'El círculo de hongos', 'El comienzo de una aventura inesperada.'),
-      ),
-      MayaNote(curiosity, label: 'Curiosidad del día'),
-    ]);
-  }
-}
-
-class _Row extends StatelessWidget {
-  const _Row(this.emoji, this.title, this.sub);
-  final String emoji, title, sub;
-  @override
-  Widget build(BuildContext context) => Row(children: [
-        Text(emoji, style: const TextStyle(fontSize: 26)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: K.body(15, color: K.night, w: FontWeight.w800)),
-            Text(sub, style: K.body(12, color: K.muted)),
-          ]),
-        ),
-      ]);
-}
-
-class _Hero extends StatelessWidget {
-  const _Hero();
-  @override
-  Widget build(BuildContext context) => Container(
-        height: 170,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFD5C493), width: 2),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF88C9AB), Color(0xFF609777), K.forest],
-          ),
-        ),
-        child: Stack(children: [
-          Positioned(
-            top: 18,
-            right: 30,
-            child: Container(
-              width: 42,
-              height: 42,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFF4D77E),
-                boxShadow: [BoxShadow(color: Color(0xFFFFED9B), blurRadius: 28)],
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        KimayaHeader(onSettings: onSettings),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('¡Qué bueno verte!',
+                      textAlign: TextAlign.center, style: K.title(16)),
+                  const SizedBox(height: 5),
+                  Text(
+                    'Maya dejó una nota nueva para ti.',
+                    textAlign: TextAlign.center,
+                    style: K.body(14, color: K.muted),
+                  ),
+                  const SizedBox(height: 16),
+                  const ForestHero(),
+                  const SizedBox(height: 14),
+                  const MayaNoteCard(kHomeQuote),
+                  FantasySectionTitle(
+                    'Las cuatro runas',
+                    trailing: state.rescued
+                        ? '1 de 4 despierta'
+                        : '0 de 4 despiertan',
+                  ),
+                  FantasyRuneGrid(
+                    firstActive: state.rescued,
+                    onTap: () => goto(2),
+                  ),
+                  if (last != null) ...[
+                    const FantasySectionTitle('Última página consultada'),
+                    PageTile(page: last, state: state),
+                  ],
+                  const FantasySectionTitle('Continúa explorando'),
+                  ResponsiveExploreGrid(
+                    children: [
+                      ExploreCard(
+                        icon: '🐾',
+                        title: 'Las hermanas',
+                        subtitle: 'Conoce a Falin, Mia y Kiara.',
+                        onTap: () => goto(3),
+                      ),
+                      ExploreCard(
+                        icon: '🍄',
+                        title: 'El círculo de hongos',
+                        subtitle: 'El comienzo de una aventura inesperada.',
+                        onTap: () => openPage(
+                          context,
+                          state,
+                          state.byKey('lugar_circulo_hongos'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  MayaNoteCard(curiosity, label: 'Curiosidad del día'),
+                ],
               ),
             ),
           ),
-          const Positioned(left: 26, bottom: 28, child: Text('🌳', style: TextStyle(fontSize: 48))),
-          const Positioned(right: 30, bottom: 20, child: Text('🌲', style: TextStyle(fontSize: 56))),
-          const Align(alignment: Alignment(0, -0.1), child: Text('🧚', style: TextStyle(fontSize: 36))),
-          Positioned(
-            left: 14,
-            bottom: 10,
-            child: Text('Un bosque que escucha lo que sentimos',
-                style: K.serif(12, color: const Color(0xFFFFF9DF))),
-          ),
-        ]),
-      );
+        ),
+      ],
+    );
+  }
 }
 
 // ------------------------------------------------------------------ Diario
@@ -109,22 +99,26 @@ class DiarioTab extends StatelessWidget {
   final AppState state;
 
   @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
+  Widget build(BuildContext context) =>
+      ListView(padding: const EdgeInsets.all(16), children: [
         Text('Diario de Maya', style: K.title(14)),
         const SizedBox(height: 6),
-        Text('Capítulos cortos, en el orden en que ocurrieron.', style: K.body(13, color: K.muted)),
+        Text('Capítulos cortos, en el orden en que ocurrieron.',
+            style: K.body(13, color: K.muted)),
         const SizedBox(height: 12),
         if (!state.rescued)
           PaperCard(
             color: K.bramble,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 'Las raíces cubren los capítulos que cuentan el desenlace, para que no te los cuente antes de tiempo.',
                 style: K.body(13, color: K.paper),
               ),
               const SizedBox(height: 8),
               FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: K.coral, foregroundColor: K.ink),
+                style: FilledButton.styleFrom(
+                    backgroundColor: K.coral, foregroundColor: K.ink),
                 onPressed: () => state.setProgress(Progress.rescued),
                 child: const Text('Ya terminé la demo'),
               ),
@@ -145,7 +139,8 @@ class MundoTab extends StatelessWidget {
     return ListView(padding: const EdgeInsets.all(16), children: [
       Text('Mapa del Bosque', style: K.title(14)),
       const SizedBox(height: 6),
-      Text('Toca una región para abrir su página.', style: K.body(13, color: K.muted)),
+      Text('Toca una región para abrir su página.',
+          style: K.body(13, color: K.muted)),
       const SizedBox(height: 12),
       _WorldMap(state: state, regions: regions),
       const SectionTitle('Regiones'),
@@ -165,7 +160,9 @@ class _WorldMap extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           gradient: const LinearGradient(
-              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [K.night, K.forest]),
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [K.night, K.forest]),
         ),
         child: LayoutBuilder(builder: (context, bc) {
           final w = bc.maxWidth, h = bc.maxHeight;
@@ -178,7 +175,8 @@ class _WorldMap extends StatelessWidget {
             Offset(w / 2, h - 72),
           ];
           return Stack(clipBehavior: Clip.none, children: [
-            Positioned.fill(child: CustomPaint(painter: _LinePainter(center, spots))),
+            Positioned.fill(
+                child: CustomPaint(painter: _LinePainter(center, spots))),
             Positioned(
               left: center.dx - 38,
               top: center.dy - 38,
@@ -189,8 +187,15 @@ class _WorldMap extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: K.night,
-                  border: Border.all(color: state.rescued ? K.gold : K.line, width: 3),
-                  boxShadow: state.rescued ? [BoxShadow(color: K.gold.withValues(alpha: .5), blurRadius: 16)] : null,
+                  border: Border.all(
+                      color: state.rescued ? K.gold : K.line, width: 3),
+                  boxShadow: state.rescued
+                      ? [
+                          BoxShadow(
+                              color: K.gold.withValues(alpha: .5),
+                              blurRadius: 16)
+                        ]
+                      : null,
                 ),
                 child: const Text('🍄', style: TextStyle(fontSize: 34)),
               ),
@@ -226,9 +231,16 @@ class _Node extends StatelessWidget {
             shape: BoxShape.circle,
             color: open ? K.forest : K.bramble,
             border: Border.all(color: open ? K.magic : K.magenta, width: 3),
-            boxShadow: open ? [BoxShadow(color: K.magic.withValues(alpha: .5), blurRadius: 14)] : null,
+            boxShadow: open
+                ? [
+                    BoxShadow(
+                        color: K.magic.withValues(alpha: .5), blurRadius: 14)
+                  ]
+                : null,
           ),
-          child: Opacity(opacity: open ? 1 : .55, child: Text(page.emoji, style: const TextStyle(fontSize: 30))),
+          child: Opacity(
+              opacity: open ? 1 : .55,
+              child: Text(page.emoji, style: const TextStyle(fontSize: 30))),
         ),
         const SizedBox(height: 4),
         Text(page.title,
@@ -276,7 +288,9 @@ class ArchivoTab extends StatelessWidget {
           if (footer != null)
             Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text(footer, textAlign: TextAlign.center, style: K.serif(13, color: K.muted)),
+              child: Text(footer,
+                  textAlign: TextAlign.center,
+                  style: K.serif(13, color: K.muted)),
             ),
         ],
       );
