@@ -63,8 +63,7 @@ class SettingsScreen extends StatelessWidget {
                               label: 'Aún no he jugado la demo',
                               description:
                                   'Quiero comenzar la aventura desde el inicio.',
-                              assetRegion:
-                                  const Rect.fromLTWH(.135, .405, .19, .12),
+                              asset: 'assets/images/runa_raices.png',
                               selected: !state.rescued,
                               onTap: () => _pick(context, Progress.notPlayed),
                             ),
@@ -73,8 +72,7 @@ class SettingsScreen extends StatelessWidget {
                               label: '¡Rescaté a Kiara!',
                               description:
                                   'Ya jugué la demo y quiero continuar desde donde me quedé.',
-                              assetRegion:
-                                  const Rect.fromLTWH(.14, .608, .19, .13),
+                              asset: 'assets/images/runa_bruma.png',
                               selected: state.rescued,
                               onTap: () => _pick(context, Progress.rescued),
                             ),
@@ -124,14 +122,14 @@ class _ProgressChoiceCard extends StatelessWidget {
   const _ProgressChoiceCard({
     required this.label,
     required this.description,
-    required this.assetRegion,
+    required this.asset,
     required this.selected,
     required this.onTap,
   });
 
   final String label;
   final String description;
-  final Rect assetRegion;
+  final String asset;
   final bool selected;
   final VoidCallback onTap;
 
@@ -158,9 +156,10 @@ class _ProgressChoiceCard extends StatelessWidget {
                 children: [
                   SizedBox.square(
                     dimension: 88,
-                    child: AssetCrop(
-                      asset: 'assets/images/menu_aventura.png',
-                      region: assetRegion,
+                    child: Image.asset(
+                      asset,
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.none,
                     ),
                   ),
                   Container(
