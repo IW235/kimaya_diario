@@ -23,17 +23,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/video/inicio_app.mp4
-    - assets/images/menu_aventura.png
-    - assets/images/pantalla_bosque.png
-    - assets/images/bosque_nocturno_chispas.png
-    - assets/images/icono_hermanas.png
-    - assets/images/icono_circulo_hongos.png
-    - assets/images/arbol_ancestral.png
-    - assets/images/maya_retrato_sin_fondo.png
-    - assets/images/maya_escena.png
-    - assets/images/encabezado_diario_del_bosque.png
-    - assets/images/registro_incompleto_01_conejo.png
-    - assets/images/registro_incompleto_02_ave.png
-    - assets/images/registro_incompleto_03_lobo.png
-    - assets/images/runa_raices.png
-    - assets/images/runa_bruma.png
+    - assets/images/

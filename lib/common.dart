@@ -49,6 +49,112 @@ class ArtworkBackdrop extends StatelessWidget {
       );
 }
 
+/// Imagen de un asset con fallback al emoji si no carga (o si no hay imagen).
+/// `boxFit` permite recortar escenas anchas y retratos cuadrados igual.
+class PageImage extends StatelessWidget {
+  const PageImage(this.page,
+      {super.key,
+      this.width,
+      this.height,
+      this.fit = BoxFit.cover,
+      this.borderRadius = 12});
+  final DiaryPage page;
+  final double? width, height;
+  final BoxFit fit;
+  final double borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final src = page.image;
+    if (src == null) {
+      return Container(
+        width: width,
+        height: height,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xFFC5D8B7),
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Text(page.emoji, style: const TextStyle(fontSize: 24)),
+      );
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Image.asset(
+        src,
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (_, __, ___) => Container(
+          width: width,
+          height: height,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: const Color(0xFFC5D8B7),
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          child: Text(page.emoji, style: const TextStyle(fontSize: 24)),
+        ),
+      ),
+    );
+  }
+}
+
+/// Imagen grande de la ficha (heroImage si existe, si no image).
+class HeroImage extends StatelessWidget {
+  const HeroImage(this.page, {super.key, this.height = 210});
+  final DiaryPage page;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final src = page.heroImage ?? page.image;
+    if (src == null) return const SizedBox.shrink();
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: K.gold, width: 2),
+        boxShadow: const [
+          BoxShadow(color: Color(0x40000000), blurRadius: 8, offset: Offset(0, 3))
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Image.asset(
+          src,
+          width: double.infinity,
+          height: height,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(
+            width: double.infinity,
+            height: height,
+            alignment: Alignment.center,
+            color: K.mossLight,
+            child: Text(page.emoji, style: const TextStyle(fontSize: 48)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Badge verde tipo "Jugable en la demo" / "No jugable en la demo".
+class Badge extends StatelessWidget {
+  const Badge(this.text, {super.key, this.dark = false});
+  final String text;
+  final bool dark;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: dark ? K.forest : const Color(0xFF2F624C),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(text,
+            style: K.body(11, color: K.paper, w: FontWeight.w800)),
+      );
+}
+
 class PaperCard extends StatelessWidget {
   const PaperCard({super.key, required this.child, this.color, this.onTap});
   final Widget child;
@@ -107,22 +213,41 @@ class Pill extends StatelessWidget {
       );
 }
 
-/// Bloque tipo papel con la voz de Maya.
+/// Bloque tipo papel con la voz de Maya, con su retrato a un lado.
 class MayaNote extends StatelessWidget {
   const MayaNote(this.text, {super.key, this.label = 'Nota de Maya'});
   final String text, label;
 
   @override
   Widget build(BuildContext context) => PaperCard(
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: K.body(12, color: K.moss, w: FontWeight.w800)),
-            const SizedBox(height: 6),
-            Text('“$text”', style: K.serif(15)),
-            const SizedBox(height: 6),
-            Text('— Maya, guardiana del círculo',
-                style: K.body(11, color: K.muted)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/maya_retrato_sin_fondo.png',
+                width: 52,
+                height: 52,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    const Text('🧚', style: TextStyle(fontSize: 32)),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: K.body(12, color: K.moss, w: FontWeight.w800)),
+                  const SizedBox(height: 6),
+                  Text('“$text”', style: K.serif(15)),
+                  const SizedBox(height: 6),
+                  Text('— Maya, guardiana del círculo',
+                      style: K.body(11, color: K.muted)),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -227,48 +352,49 @@ class PageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final covered = page.locked || state.hidden(page);
-    final iconAsset = !covered && page.key == 'region_sendero'
-        ? 'assets/images/runa_raices.png'
-        : null;
     final isChapter = page.category == 'capitulo';
     final title = covered && isChapter
         ? 'Capítulo ${page.order}'
         : (isChapter ? '${page.order}. ${page.title}' : page.title);
     final sub = covered
         ? coverText(page.key)
-        : (page.meta['Papel'] ?? page.meta['Estado'] ?? page.body);
+        : (page.body.isNotEmpty ? page.body : (page.meta['Papel'] ?? page.meta['Estado'] ?? ''));
+    // Badge como en la inspiración: "Jugable en la demo" / "No jugable en la
+    // demo" (Papel) o el Estado del lugar. Zarzal usa su estado ("Activo").
+    final badge = covered
+        ? null
+        : (page.meta['Papel'] ??
+            page.meta['Estado'] ??
+            (page.key == 'personaje_zarzal' ? 'Activo' : null));
     return PaperCard(
-      color: covered ? K.bramble : K.mossLight,
+      color: covered ? K.bramble : K.card,
       onTap: () => openPage(context, state, page),
       child: Row(children: [
-        Container(
-          width: 46,
-          height: 46,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: covered ? K.violet : const Color(0xFFC5D8B7),
-              borderRadius: BorderRadius.circular(10)),
-          child: iconAsset == null
-              ? Text(covered ? '🌫️' : page.emoji,
-                  style: const TextStyle(fontSize: 24))
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(9),
-                  child: Image.asset(
-                    iconAsset,
-                    width: 44,
-                    height: 44,
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.none,
-                  ),
-                ),
-        ),
+        if (covered)
+          Container(
+            width: 64,
+            height: 64,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: K.violet, borderRadius: BorderRadius.circular(10)),
+            child: const Text('🌫️', style: TextStyle(fontSize: 24)),
+          )
+        else
+          PageImage(page, width: 64, height: 64, borderRadius: 10),
         const SizedBox(width: 12),
         Expanded(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title,
-                style: K.body(15,
-                    color: covered ? K.paper : K.night, w: FontWeight.w800)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Flexible(
+                child: Text(title,
+                    style: K.body(15,
+                        color: covered ? K.paper : K.night, w: FontWeight.w800)),
+              ),
+              if (badge != null) ...[
+                const SizedBox(width: 8),
+                Badge(badge),
+              ],
+            ]),
             if (sub.isNotEmpty)
               Text(sub,
                   maxLines: 2,
@@ -323,26 +449,63 @@ class DetailScreen extends StatelessWidget {
             style: K.title(11, color: K.paper)),
       ),
       body: ListView(padding: const EdgeInsets.all(18), children: [
-        Center(
-          child: Container(
-            width: 84,
-            height: 84,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: covered ? K.bramble : K.mossLight,
-              shape: BoxShape.circle,
-              border: Border.all(color: covered ? K.magenta : K.moss, width: 2),
+        // Imagen grande de la ficha (inspiración pp. 4, 7-8, 10). En las
+        // fichas bloqueadas no se muestra la imagen: sigue "Por descubrir".
+        if (!covered && (page.heroImage ?? page.image) != null) ...[
+          HeroImage(page),
+          const SizedBox(height: 14),
+        ] else if (covered)
+          Center(
+            child: Container(
+              width: 84,
+              height: 84,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: K.bramble,
+                shape: BoxShape.circle,
+                border: Border.all(color: K.magenta, width: 2),
+              ),
+              child: const Text('🌫️', style: TextStyle(fontSize: 38)),
             ),
-            child: Text(covered ? '🌫️' : page.emoji,
-                style: const TextStyle(fontSize: 38)),
           ),
-        ),
-        const SizedBox(height: 16),
+        if (!covered) ...[
+          // Placa con el nombre, como en las fichas de la inspiración.
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+            decoration: BoxDecoration(
+              color: K.card,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: K.gold, width: 2),
+            ),
+            child: Text(page.title,
+                textAlign: TextAlign.center, style: K.title(13)),
+          ),
+          const SizedBox(height: 10),
+        ],
         if (covered) ...[
           Cover(coverText(page.key)),
           const SizedBox(height: 12),
-          if (locked && page.note != null)
-            MayaNote(page.note!, label: 'Adelanto de Maya'),
+          // El Jardín de la Bruma lleva su emblema aunque esté por descubrir.
+          if (page.emblem != null) ...[
+            Center(
+              child: Column(children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(page.emblem!,
+                      width: 180,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink()),
+                ),
+                const SizedBox(height: 6),
+                Text('Emblema de niebla encantada',
+                    style: K.body(12, color: K.muted, w: FontWeight.w800)),
+              ]),
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (locked && page.note != null) MayaNote(page.note!, label: 'Adelanto de Maya'),
           if (spoiler)
             FilledButton(
               onPressed: () async {
@@ -353,12 +516,29 @@ class DetailScreen extends StatelessWidget {
               child: const Text('Ya terminé la demo'),
             ),
         ] else ...[
-          Text(page.title, textAlign: TextAlign.center, style: K.title(13)),
           if (status != null)
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 2),
               child: Center(child: Pill('Estado: $status')),
             ),
+          if (page.emblem != null) ...[
+            const SizedBox(height: 12),
+            Center(
+              child: Column(children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(page.emblem!,
+                      width: 180,
+                      height: 120,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink()),
+                ),
+                const SizedBox(height: 6),
+                Text('Emblema de niebla encantada',
+                    style: K.body(12, color: K.muted, w: FontWeight.w800)),
+              ]),
+            ),
+          ],
           const SizedBox(height: 14),
           for (final e in page.meta.entries)
             Padding(

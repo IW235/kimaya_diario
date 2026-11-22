@@ -241,9 +241,17 @@ class _Node extends StatelessWidget {
                   ]
                 : null,
           ),
-          child: Opacity(
+          child: ClipOval(
+            child: Opacity(
               opacity: open ? 1 : .55,
-              child: Text(page.emoji, style: const TextStyle(fontSize: 30))),
+              child: page.image != null
+                  ? Image.asset(page.image!,
+                      width: 66, height: 66, fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          Text(page.emoji, style: const TextStyle(fontSize: 30)))
+                  : Text(page.emoji, style: const TextStyle(fontSize: 30)),
+            ),
+          ),
         ),
         const SizedBox(height: 4),
         Text(page.title,
@@ -302,6 +310,34 @@ class ArchivoTab extends StatelessWidget {
   Widget build(BuildContext context) => DefaultTabController(
         length: 4,
         child: Column(children: [
+          // Banner del Archivo (inspiración, p. 2): "Kimaya: El Bosque del
+          // Eco / Diario del Bosque, Archivo de Maya · Vol. I".
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: K.gold, width: 2),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.asset(
+                  'assets/images/encabezado_diario_del_bosque.png',
+                  width: double.infinity,
+                  height: 96,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    width: double.infinity,
+                    height: 96,
+                    alignment: Alignment.center,
+                    color: K.night,
+                    child: Text('Kimaya: El Bosque del Eco',
+                        style: K.title(11, color: K.paper)),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Material(
             color: K.card,
             child: TabBar(
@@ -314,17 +350,20 @@ class ArchivoTab extends StatelessWidget {
               labelPadding: const EdgeInsets.symmetric(horizontal: 13),
               labelStyle: K.body(11, w: FontWeight.w800),
               tabs: const [
-                Tab(height: 38, text: 'Personajes'),
-                Tab(height: 38, text: 'Lugares'),
-                Tab(height: 38, text: 'Magia y objetos'),
-                Tab(height: 38, text: 'Criaturas'),
+                Tab(height: 38, icon: const Icon(Icons.pets), text: 'Personajes'),
+                Tab(height: 38, icon: const Icon(Icons.landscape), text: 'Lugares'),
+                Tab(height: 38, icon: const Icon(Icons.auto_awesome), text: 'Magia y objetos'),
+                Tab(height: 38, icon: const Icon(Icons.bug_report), text: 'Criaturas'),
               ],
             ),
           ),
           Expanded(
             child: TabBarView(children: [
               _list(state.all('personaje')),
-              _list([...state.all('lugar'), ...state.all('region')]),
+              // Lugares ya incluye Bosque, Círculo de hongos, Círculo
+              // central, Sendero, Laguna, Copas y Jardín de la Bruma; no
+              // se mezclan con las regiones del Mundo para no duplicar.
+              _list(state.all('lugar')),
               _list(state.all('magia')),
               _CreaturesArchive(state: state),
             ]),

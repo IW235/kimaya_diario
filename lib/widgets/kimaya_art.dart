@@ -122,7 +122,9 @@ class JournalHeader extends StatelessWidget {
                       onTap: onSettings,
                     ),
                     const SizedBox(width: 7),
-                    const _JournalHeaderButton(label: 'Maya', emoji: '🧚'),
+                    const _JournalHeaderButton(
+                        label: 'Maya',
+                        image: 'assets/images/maya_retrato_sin_fondo.png'),
                   ],
                 ),
               ),
@@ -139,12 +141,14 @@ class _JournalHeaderButton extends StatelessWidget {
     required this.label,
     this.icon,
     this.emoji,
+    this.image,
     this.onTap,
   });
 
   final String label;
   final IconData? icon;
   final String? emoji;
+  final String? image;
   final VoidCallback? onTap;
 
   @override
@@ -162,9 +166,20 @@ class _JournalHeaderButton extends StatelessWidget {
               color: const Color(0xFF0E332F),
               border: Border.all(color: K.gold, width: 2),
             ),
-            child: icon != null
-                ? Icon(icon, color: K.paper, size: 23)
-                : Text(emoji!, style: const TextStyle(fontSize: 22)),
+            child: image != null
+                ? ClipOval(
+                    child: Image.asset(
+                      image!,
+                      width: 38,
+                      height: 38,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const Text('🧚', style: TextStyle(fontSize: 22)),
+                    ),
+                  )
+                : icon != null
+                    ? Icon(icon, color: K.paper, size: 23)
+                    : Text(emoji!, style: const TextStyle(fontSize: 22)),
           ),
         ),
       );
