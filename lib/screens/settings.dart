@@ -3,66 +3,196 @@ import 'package:flutter/material.dart';
 import '../common.dart';
 import '../state.dart';
 import '../theme.dart';
-import 'welcome.dart';
+import '../widgets/kimaya_art.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, required this.state});
   final AppState state;
 
+  Future<void> _pick(BuildContext context, Progress progress) async {
+    final navigator = Navigator.of(context);
+    await state.setProgress(progress);
+    navigator.pop();
+  }
+
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-        listenable: state,
-        builder: (context, _) => Scaffold(
-          appBar: AppBar(title: Text('Ajustes', style: K.title(12, color: K.paper))),
-          body: ListView(padding: const EdgeInsets.all(16), children: [
-            const SectionTitle('Progreso narrativo'),
-            PaperCard(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(state.rescued ? 'Ya rescaté a Kiara' : 'Todavía no he jugado la demo',
-                    style: K.body(15, w: FontWeight.w800)),
-                const SizedBox(height: 8),
-                OutlinedButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ProgressScreen(state: state, fromSettings: true))),
-                  child: const Text('Cambiar progreso'),
-                ),
-              ]),
-            ),
-            const SectionTitle('Supabase'),
-            PaperCard(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(children: [
-                  Icon(state.online ? Icons.cloud_done : Icons.cloud_off,
-                      color: state.online ? K.forest : K.muted),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      state.online
-                          ? 'Conectado: leyendo lore_entries'
-                          : 'Modo local: usando el contenido integrado',
-                      style: K.body(14),
-                    ),
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: K.night,
+        body: ArtworkBackdrop(
+          asset: 'assets/images/menu_aventura.png',
+          child: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton.filled(
+                          tooltip: 'Volver',
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: IconButton.styleFrom(
+                            backgroundColor: K.night.withValues(alpha: .88),
+                            foregroundColor: K.paper,
+                            side: const BorderSide(color: K.gold, width: 2),
+                          ),
+                          icon: const Icon(Icons.arrow_back_rounded),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      FantasyPanel(
+                        padding: const EdgeInsets.fromLTRB(18, 26, 18, 24),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.auto_awesome,
+                                color: K.gold, size: 30),
+                            const SizedBox(height: 8),
+                            Text(
+                              '¿En qué parte de la aventura\nte encuentras?',
+                              textAlign: TextAlign.center,
+                              style:
+                                  K.title(15, color: const Color(0xFF461B10)),
+                            ),
+                            const SizedBox(height: 18),
+                            const _OrnamentDivider(),
+                            const SizedBox(height: 20),
+                            _ProgressChoiceCard(
+                              label: 'Aún no he jugado la demo',
+                              description:
+                                  'Quiero comenzar la aventura desde el inicio.',
+                              asset: 'assets/images/runa_raices.png',
+                              selected: !state.rescued,
+                              onTap: () => _pick(context, Progress.notPlayed),
+                            ),
+                            const SizedBox(height: 14),
+                            _ProgressChoiceCard(
+                              label: '¡Rescaté a Kiara!',
+                              description:
+                                  'Ya jugué la demo y quiero continuar desde donde me quedé.',
+                              asset: 'assets/images/runa_bruma.png',
+                              selected: state.rescued,
+                              onTap: () => _pick(context, Progress.rescued),
+                            ),
+                            const SizedBox(height: 18),
+                            const _OrnamentDivider(),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ]),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: state.syncing ? null : state.syncRemote,
-                  child: Text(state.syncing ? 'Sincronizando…' : 'Sincronizar ahora'),
                 ),
-              ]),
-            ),
-            const SectionTitle('Créditos y procedencia'),
-            PaperCard(
-              child: Text(
-                'Proyecto escolar de la Universidad Tecnológica de Chihuahua.\n'
-                'Equipo Fairytopia · IDGS102N · Creación de Videojuegos.\n\n'
-                'Textos: documento “Aplicación Móvil Kimaya”.\n'
-                'Tipografías: Press Start 2P y Nunito (SIL Open Font License), con el paquete google_fonts.\n'
-                'Ilustraciones: emojis del sistema como marcador provisional. Sustituir por pixel art propio y registrar autor, fuente y licencia de cada recurso.',
-                style: K.body(13, color: K.muted),
               ),
             ),
-          ]),
+          ),
+        ),
+      );
+}
+
+class _OrnamentDivider extends StatelessWidget {
+  const _OrnamentDivider();
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          const Expanded(
+              child: Divider(color: Color(0xFFD49B24), thickness: 2)),
+          const SizedBox(width: 12),
+          Transform.rotate(
+            angle: .78,
+            child: Container(
+              width: 14,
+              height: 14,
+              decoration: BoxDecoration(
+                color: K.magic,
+                border: Border.all(color: const Color(0xFFC97808), width: 2),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+              child: Divider(color: Color(0xFFD49B24), thickness: 2)),
+        ],
+      );
+}
+
+class _ProgressChoiceCard extends StatelessWidget {
+  const _ProgressChoiceCard({
+    required this.label,
+    required this.description,
+    required this.asset,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final String description;
+  final String asset;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        selected: selected,
+        label: label,
+        child: Material(
+          color: const Color(0xFFFFF7E5),
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: selected ? K.magic : const Color(0xFFD69420),
+              width: selected ? 3 : 2,
+            ),
+          ),
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  SizedBox.square(
+                    dimension: 88,
+                    child: Image.asset(
+                      asset,
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.none,
+                    ),
+                  ),
+                  Container(
+                    width: 2,
+                    height: 76,
+                    margin: const EdgeInsets.symmetric(horizontal: 14),
+                    color: const Color(0xFFE4A22C),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          label,
+                          style: K.body(18,
+                              color: const Color(0xFF40170E),
+                              w: FontWeight.w900),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          description,
+                          style: K.serif(14, color: const Color(0xFF40170E)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Icon(Icons.chevron_right_rounded,
+                      color: Color(0xFFC06A00), size: 38),
+                ],
+              ),
+            ),
+          ),
         ),
       );
 }

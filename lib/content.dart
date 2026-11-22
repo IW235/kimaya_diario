@@ -14,6 +14,9 @@ class DiaryPage {
     this.order = 0,
     this.meta = const {},
     this.lists = const {},
+    this.image,
+    this.heroImage,
+    this.emblem,
   });
 
   final String key, category, title, emoji, body;
@@ -23,6 +26,10 @@ class DiaryPage {
   final int order;
   final Map<String, String> meta;
   final Map<String, List<String>> lists;
+  // Imagen del asset (assets/images/…). `image` es la miniatura de la lista
+  // y `heroImage` la imagen grande de la ficha; si falta, se usa el emoji.
+  // `emblem` es un emblema opcional (p. ej. Jardín de la Bruma).
+  final String? image, heroImage, emblem;
 
   DiaryPage copyWith({String? title, String? body, String? note}) => DiaryPage(
         key: key,
@@ -36,6 +43,9 @@ class DiaryPage {
         order: order,
         meta: meta,
         lists: lists,
+        image: image,
+        heroImage: heroImage,
+        emblem: emblem,
       );
 }
 
@@ -103,6 +113,8 @@ final kPages = <DiaryPage>[
     category: 'region',
     title: 'Sendero de las Raíces',
     emoji: '🌱',
+    image: 'assets/images/sendero_de_las_raices.png',
+    heroImage: 'assets/images/sendero_de_las_raices.png',
     order: 1,
     meta: {
       'Estado': 'Jugable en la demo',
@@ -122,6 +134,8 @@ final kPages = <DiaryPage>[
     category: 'region',
     title: 'Laguna de los Reflejos',
     emoji: '💧',
+    image: 'assets/images/laguna_de_los_reflejos.png',
+    heroImage: 'assets/images/laguna_de_los_reflejos.png',
     order: 2,
     locked: true,
     note:
@@ -132,6 +146,8 @@ final kPages = <DiaryPage>[
     category: 'region',
     title: 'Copas del Susurro',
     emoji: '🍃',
+    image: 'assets/images/copas_del_susurro.png',
+    heroImage: 'assets/images/copas_del_susurro.png',
     order: 3,
     locked: true,
     note:
@@ -142,6 +158,9 @@ final kPages = <DiaryPage>[
     category: 'region',
     title: 'Jardín de la Bruma',
     emoji: '🌫️',
+    image: 'assets/images/jardin_de_la_bruma.png',
+    heroImage: 'assets/images/jardin_de_la_bruma.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
     order: 4,
     locked: true,
     note: 'No sigas una voz si no puedes ver quién llama.',
@@ -153,6 +172,8 @@ final kPages = <DiaryPage>[
     category: 'personaje',
     title: 'Falin',
     emoji: '🐕',
+    image: 'assets/images/retrato_falin.png',
+    heroImage: 'assets/images/personaje_falin.png',
     meta: {
       'Especie': 'Border Collie',
       'Posición': 'La menor de las tres',
@@ -174,6 +195,8 @@ final kPages = <DiaryPage>[
     category: 'personaje',
     title: 'Mia',
     emoji: '🐩',
+    image: 'assets/images/retrato_mia.png',
+    heroImage: 'assets/images/personaje_mia.png',
     meta: {
       'Especie': 'Schnauzer miniatura',
       'Papel': 'Jugable en la demo',
@@ -194,6 +217,8 @@ final kPages = <DiaryPage>[
     category: 'personaje',
     title: 'Kiara',
     emoji: '🐶',
+    image: 'assets/images/retrato_kiara.png',
+    heroImage: 'assets/images/personaje_kiara.png',
     meta: {
       'Especie': 'Schnauzer mediana',
       'Posición': 'La mayor de las tres',
@@ -214,6 +239,8 @@ final kPages = <DiaryPage>[
     category: 'personaje',
     title: 'Maya',
     emoji: '🧚',
+    image: 'assets/images/retrato_maya.png',
+    heroImage: 'assets/images/personaje_maya.png',
     meta: {
       'Especie': 'Hada guardiana',
       'Función': 'Protectora del círculo y narradora del diario',
@@ -231,6 +258,8 @@ final kPages = <DiaryPage>[
     category: 'personaje',
     title: 'Zarzal Sombrío',
     emoji: '🥀',
+    image: 'assets/images/retrato_zarzal_sombrio.png',
+    heroImage: 'assets/images/retrato_zarzal_sombrio.png',
     meta: {
       'Clasificación': 'Fenómeno mágico desconocido',
       'Nivel de riesgo': 'Variable',
@@ -244,14 +273,22 @@ final kPages = <DiaryPage>[
   ),
 
   // ---------------- Lugares ----------------
+  // Diseño como las fichas de personajes (imagen, Estado, descripción,
+  // rasgos/peligros y Nota de Maya). El Bosque del Eco es la ventana de
+  // ejemplo; las demás siguen ese modelo (instrucciones, pp. 5-8).
   const DiaryPage(
     key: 'lugar_bosque',
     category: 'lugar',
     title: 'Bosque del Eco',
     emoji: '🌲',
+    image: 'assets/images/lugar_bosque_del_eco.png',
+    heroImage: 'assets/images/lugar_bosque_del_eco.png',
     meta: {'Estado': 'Disponible'},
     body:
         'Un mundo mágico conectado con otros lugares mediante círculos de hongos, árboles huecos y símbolos antiguos. Recibe su nombre porque reacciona a los sentimientos de quienes lo atraviesan: la confianza ilumina caminos, la esperanza muestra plantas escondidas, el miedo hace crecer raíces y espinas, la inseguridad cubre el sendero de niebla y las discusiones dividen el camino.',
+    lists: {
+      'Rasgos del lugar': ['Vivo', 'Sensible', 'Cambia con las emociones'],
+    },
     note: kHomeQuote,
   ),
   const DiaryPage(
@@ -259,16 +296,89 @@ final kPages = <DiaryPage>[
     category: 'lugar',
     title: 'Círculo de hongos',
     emoji: '🍄',
+    image: 'assets/images/circulo_de_hongos.png',
+    heroImage: 'assets/images/circulo_de_hongos.png',
     body:
         'Portales antiguos que conectan el Bosque del Eco con otros mundos. Para activarse necesitan un objeto que cruce primero, seres vivos unidos por un vínculo emocional y una emoción suficientemente intensa.',
+    lists: {
+      'Rasgos del lugar': ['Portales', 'Vínculo emocional', 'Requiere un objeto'],
+    },
+    note: 'Los círculos no solo abren caminos, también ponen a prueba lo que los une.',
   ),
   const DiaryPage(
     key: 'lugar_circulo_central',
     category: 'lugar',
     title: 'Círculo central',
     emoji: '⭕',
+    image: 'assets/images/lugar_circulo_central.png',
+    heroImage: 'assets/images/circulo_central_descripcion.png',
     body:
         'El punto al que llegan las tres hermanas y el único lugar desde el que pueden regresar a casa. El Zarzal debilitó sus cuatro runas y cerró las conexiones que permitirían activarlo por completo.',
+    lists: {
+      'Rasgos del lugar': ['Punto de retorno', 'Cuatro runas', 'Conexión bloqueada'],
+    },
+    note: 'Regresar a casa todavía es posible… pero primero debemos recuperar el equilibrio.',
+  ),
+  const DiaryPage(
+    key: 'lugar_sendero_raices',
+    category: 'lugar',
+    title: 'Sendero de las Raíces',
+    emoji: '🌱',
+    image: 'assets/images/sendero_de_las_raices.png',
+    heroImage: 'assets/images/sendero_de_las_raices.png',
+    meta: {
+      'Estado': 'Jugable en la demo',
+      'Runa': 'Raíces',
+      'Tema': 'Constancia, impulso y consecuencias de actuar',
+    },
+    body:
+        'Un camino ascendente de plataformas y saltos de precisión. Cada salto fallido cuesta altura, y cada decisión tiene consecuencias.',
+    lists: {
+      'Peligros conocidos': ['Caídas', 'Raíces oscuras del Zarzal'],
+    },
+    note:
+        'Hoy las raíces están inquietas. Eso suele significar que alguien tomó una decisión apresurada…',
+  ),
+  const DiaryPage(
+    key: 'lugar_laguna_reflejos',
+    category: 'lugar',
+    title: 'Laguna de los Reflejos',
+    emoji: '💧',
+    image: 'assets/images/lugar_laguna_reflejos.png',
+    heroImage: 'assets/images/laguna_de_los_reflejos.png',
+    meta: {'Estado': 'Por descubrir'},
+    locked: true,
+    note:
+        'Sus aguas no siempre muestran el rostro de quien se asoma. En ocasiones reflejan aquello que esa persona teme llegar a convertirse.',
+  ),
+  const DiaryPage(
+    key: 'lugar_copas_susurros',
+    category: 'lugar',
+    title: 'Copas del Susurro',
+    emoji: '🍃',
+    image: 'assets/images/lugar_copas_susurros.png',
+    heroImage: 'assets/images/copas_del_susurro.png',
+    meta: {'Estado': 'Por descubrir'},
+    locked: true,
+    note:
+        'En la parte más alta del bosque, las hojas conservan palabras que nadie se atrevió a decir por miedo a no ser entendido o escuchado.',
+  ),
+  const DiaryPage(
+    key: 'lugar_jardin_bruma',
+    category: 'lugar',
+    title: 'Jardín de la Bruma',
+    emoji: '🌫️',
+    image: 'assets/images/jardin_de_la_bruma.png',
+    heroImage: 'assets/images/jardin_de_la_bruma.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
+    meta: {'Estado': 'Por descubrir'},
+    locked: true,
+    body:
+        'Un jardín oculto donde la bruma nunca se disipa. Sus senderos cambian, las formas se confunden y los recuerdos parecen mezclarse con el paisaje. Dicen que aquí habitan las palabras que nadie se atrevió a decir.',
+    lists: {
+      'Peligros conocidos': ['Confusión', 'Ecos del pasado', 'Senderos cambiantes'],
+    },
+    note: 'No sigas una voz si no puedes ver quién llama.',
   ),
 
   // ---------------- Magia y objetos ----------------
@@ -277,13 +387,18 @@ final kPages = <DiaryPage>[
     category: 'magia',
     title: 'La pelota',
     emoji: '⚽',
+    image: 'assets/images/pelota_roja_escena.png',
+    heroImage: 'assets/images/pelota_roja_escena.png',
     body: 'El primer detonante. Cruzó el círculo antes que nadie y lo despertó.',
+    note: 'Parece solo una pelota… pero fue la chispa que puso en marcha todo.',
   ),
   const DiaryPage(
     key: 'magia_runas',
     category: 'magia',
     title: 'Las cuatro runas',
     emoji: '✦',
+    image: 'assets/images/cuatro_runas_escena.png',
+    heroImage: 'assets/images/cuatro_runas_escena.png',
     body:
         'Cada runa está vinculada con una región distinta. Para regresar a casa, las hermanas deberán restaurar las cuatro conexiones.',
     lists: {
@@ -295,6 +410,8 @@ final kPages = <DiaryPage>[
     category: 'magia',
     title: 'Los portales',
     emoji: '🌀',
+    image: 'assets/images/portales_escena.png',
+    heroImage: 'assets/images/portales_escena.png',
     body: 'Pasajes antiguos entre mundos. Normalmente duermen, y solo despiertan cuando se juntan las tres condiciones.',
   ),
   const DiaryPage(
@@ -302,6 +419,8 @@ final kPages = <DiaryPage>[
     category: 'magia',
     title: 'El diario de Maya',
     emoji: '📖',
+    image: 'assets/images/diario_de_maya_escena.png',
+    heroImage: 'assets/images/diario_de_maya_escena.png',
     body: 'Es donde estás ahora. Algunas páginas antiguas han desaparecido y Maya no recuerda cómo.',
     note: 'Algunas páginas están completas. Otras… bueno, será mejor que las descubramos juntos.',
   ),
@@ -310,11 +429,13 @@ final kPages = <DiaryPage>[
     category: 'magia',
     title: 'Las raíces corrompidas',
     emoji: '🕸️',
+    image: 'assets/images/raices_corrompidas_escena.png',
+    heroImage: 'assets/images/raices_corrompidas_escena.png',
     body: 'Una manifestación del Zarzal. Toman un miedo verdadero y lo hacen crecer hasta ocupar todo el camino.',
   ),
 
   // ---------------- Criaturas (registro incompleto) ----------------
-  const DiaryPage(key: 'criatura_1', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', locked: true),
-  const DiaryPage(key: 'criatura_2', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', locked: true),
-  const DiaryPage(key: 'criatura_3', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', locked: true),
+  const DiaryPage(key: 'criatura_1', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_01_conejo.png', heroImage: 'assets/images/registro_incompleto_01_conejo.png', locked: true),
+  const DiaryPage(key: 'criatura_2', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_02_ave.png', heroImage: 'assets/images/registro_incompleto_02_ave.png', locked: true),
+  const DiaryPage(key: 'criatura_3', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_03_lobo.png', heroImage: 'assets/images/registro_incompleto_03_lobo.png', locked: true),
 ];
