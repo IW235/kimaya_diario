@@ -22,26 +22,22 @@ class AssetCrop extends StatelessWidget {
           final fullWidth = constraints.maxWidth / region.width;
           final fullHeight = constraints.maxHeight / region.height;
           return ClipRect(
-            child: Transform.translate(
-              offset: Offset(
-                -region.left * fullWidth,
-                -region.top * fullHeight,
-              ),
-              child: OverflowBox(
-                alignment: Alignment.topLeft,
-                minWidth: fullWidth,
-                maxWidth: fullWidth,
-                minHeight: fullHeight,
-                maxHeight: fullHeight,
-                child: SizedBox(
-                  width: fullWidth,
-                  height: fullHeight,
-                  child: Image.asset(
-                    asset,
-                    fit: fit,
-                    filterQuality: FilterQuality.none,
+            child: SizedBox.expand(
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Positioned(
+                    left: -region.left * fullWidth,
+                    top: -region.top * fullHeight,
+                    width: fullWidth,
+                    height: fullHeight,
+                    child: Image.asset(
+                      asset,
+                      fit: fit,
+                      filterQuality: FilterQuality.none,
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           );
@@ -53,17 +49,18 @@ class KimayaHeader extends StatelessWidget {
   const KimayaHeader({super.key, required this.onSettings});
   final VoidCallback onSettings;
 
-  static const _asset = 'assets/images/pantalla_bosque.png';
+  static const _asset = 'assets/images/bosque_nocturno_chispas.png';
 
   @override
   Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: 1024 / 304,
+        aspectRatio: 1672 / 483,
         child: Stack(
           fit: StackFit.expand,
           children: [
             const AssetCrop(
               asset: _asset,
-              region: Rect.fromLTWH(0, 0, 1, .198),
+              // El archivo conserva franjas blancas fuera de la ilustración.
+              region: Rect.fromLTWH(0, .178, 1, .513),
             ),
             Positioned(
               top: 10,
@@ -391,13 +388,13 @@ class _FantasyRune extends StatelessWidget {
 class ExploreCard extends StatelessWidget {
   const ExploreCard({
     super.key,
-    required this.icon,
+    required this.iconAsset,
     required this.title,
     required this.subtitle,
     required this.onTap,
   });
 
-  final String icon;
+  final String iconAsset;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -407,7 +404,16 @@ class ExploreCard extends StatelessWidget {
         onTap: onTap,
         child: Row(
           children: [
-            Text(icon, style: const TextStyle(fontSize: 38)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                iconAsset,
+                width: 64,
+                height: 64,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
+              ),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

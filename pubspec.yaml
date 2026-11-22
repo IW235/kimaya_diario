@@ -25,5 +25,8 @@ flutter:
     - assets/video/inicio_app.mp4
     - assets/images/menu_aventura.png
     - assets/images/pantalla_bosque.png
+    - assets/images/bosque_nocturno_chispas.png
+    - assets/images/icono_hermanas.png
+    - assets/images/icono_circulo_hongos.png
     - assets/images/runa_raices.png
     - assets/images/runa_bruma.png

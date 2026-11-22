@@ -64,13 +64,13 @@ class InicioTab extends StatelessWidget {
                   ResponsiveExploreGrid(
                     children: [
                       ExploreCard(
-                        icon: '🐾',
+                        iconAsset: 'assets/images/icono_hermanas.png',
                         title: 'Las hermanas',
                         subtitle: 'Conoce a Falin, Mia y Kiara.',
                         onTap: () => goto(3),
                       ),
                       ExploreCard(
-                        icon: '🍄',
+                        iconAsset: 'assets/images/icono_circulo_hongos.png',
                         title: 'El círculo de hongos',
                         subtitle: 'El comienzo de una aventura inesperada.',
                         onTap: () => openPage(

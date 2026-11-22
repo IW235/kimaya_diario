@@ -227,6 +227,9 @@ class PageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final covered = page.locked || state.hidden(page);
+    final iconAsset = !covered && page.key == 'region_sendero'
+        ? 'assets/images/runa_raices.png'
+        : null;
     final isChapter = page.category == 'capitulo';
     final title = covered && isChapter
         ? 'Capítulo ${page.order}'
@@ -245,8 +248,19 @@ class PageTile extends StatelessWidget {
           decoration: BoxDecoration(
               color: covered ? K.violet : const Color(0xFFC5D8B7),
               borderRadius: BorderRadius.circular(10)),
-          child: Text(covered ? '🌫️' : page.emoji,
-              style: const TextStyle(fontSize: 24)),
+          child: iconAsset == null
+              ? Text(covered ? '🌫️' : page.emoji,
+                  style: const TextStyle(fontSize: 24))
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(9),
+                  child: Image.asset(
+                    iconAsset,
+                    width: 44,
+                    height: 44,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                  ),
+                ),
         ),
         const SizedBox(width: 12),
         Expanded(
