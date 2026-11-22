@@ -43,7 +43,16 @@ class _HomeShellState extends State<HomeShell> {
               color: const Color(0xFF38705A),
               border: Border.all(color: K.gold, width: 2),
             ),
-            child: const Text('🧚', style: TextStyle(fontSize: 22)),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/maya_retrato_sin_fondo.png',
+                width: 36,
+                height: 36,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    const Text('🧚', style: TextStyle(fontSize: 22)),
+              ),
+            ),
           ),
         ],
       ),
