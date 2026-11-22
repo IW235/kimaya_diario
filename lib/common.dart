@@ -304,6 +304,12 @@ class DetailScreen extends StatelessWidget {
     if (!covered && page.key == 'lugar_bosque') {
       return _BosqueEcoScreen(page: page);
     }
+    if (!covered && page.key == 'personaje_maya') {
+      return _MayaDetailScreen(
+        page: page,
+        status: state.statusFor(page) ?? 'En el Bosque del Eco',
+      );
+    }
     final status = state.statusFor(page);
     final heading = covered && page.category == 'capitulo'
         ? 'Capítulo ${page.order}'
@@ -383,6 +389,273 @@ class DetailScreen extends StatelessWidget {
       ]),
     );
   }
+}
+
+class _MayaDetailScreen extends StatelessWidget {
+  const _MayaDetailScreen({required this.page, required this.status});
+
+  final DiaryPage page;
+  final String status;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Maya', style: K.title(11, color: K.paper)),
+        ),
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFFFF9E8), Color(0xFFF4E3B6)],
+            ),
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 850),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(26),
+                        ),
+                        child: AspectRatio(
+                          aspectRatio: 838 / 275,
+                          child: Image.asset(
+                            'assets/images/maya_escena.png',
+                            fit: BoxFit.cover,
+                            alignment: Alignment.center,
+                            filterQuality: FilterQuality.none,
+                            semanticLabel: 'Maya en el Bosque del Eco',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'Maya',
+                              textAlign: TextAlign.center,
+                              style: K.title(18),
+                            ),
+                            const SizedBox(height: 8),
+                            Center(child: _MayaStatus(status)),
+                            const SizedBox(height: 16),
+                            _MayaProfilePanel(page: page),
+                            if (page.note != null) ...[
+                              const SizedBox(height: 16),
+                              _MayaQuotePanel(text: page.note!),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
+class _MayaStatus extends StatelessWidget {
+  const _MayaStatus(this.status);
+
+  final String status;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFDCEDE1),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: const Color(0xFFB7D5BE)),
+        ),
+        child: Text(
+          'Estado: $status',
+          style: K.body(14, color: K.night, w: FontWeight.w900),
+        ),
+      );
+}
+
+class _MayaProfilePanel extends StatelessWidget {
+  const _MayaProfilePanel({required this.page});
+
+  final DiaryPage page;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFAEC),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFD5BA72), width: 1.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x18000000),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final entry in page.meta.entries) ...[
+              _MayaFact(
+                icon: entry.key == 'Especie' ? '🦋' : '📖',
+                label: entry.key,
+                value: entry.value,
+              ),
+              const SizedBox(height: 8),
+            ],
+            const Divider(color: Color(0xFFD5BA72), height: 20),
+            Text(page.body, style: K.body(15)),
+            const SizedBox(height: 16),
+            for (final entry in page.lists.entries) ...[
+              _MayaTagGroup(
+                title: entry.key,
+                icon: '🌿',
+                values: entry.value,
+              ),
+              const SizedBox(height: 14),
+            ],
+          ],
+        ),
+      );
+}
+
+class _MayaFact extends StatelessWidget {
+  const _MayaFact({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  final String icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(icon, style: const TextStyle(fontSize: 22)),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '$label: ',
+                    style: K.body(14, color: K.ink, w: FontWeight.w900),
+                  ),
+                  TextSpan(text: value, style: K.body(14)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+}
+
+class _MayaTagGroup extends StatelessWidget {
+  const _MayaTagGroup({
+    required this.title,
+    required this.icon,
+    required this.values,
+  });
+
+  final String title;
+  final String icon;
+  final List<String> values;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(icon, style: const TextStyle(fontSize: 22)),
+              const SizedBox(width: 8),
+              Text(title, style: K.title(10, color: K.forest)),
+            ],
+          ),
+          const SizedBox(height: 9),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final value in values)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDDECDD),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    value,
+                    style: K.body(12, color: K.night, w: FontWeight.w800),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+}
+
+class _MayaQuotePanel extends StatelessWidget {
+  const _MayaQuotePanel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFCF1),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFBEA15B), width: 2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x18000000),
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('📖', style: TextStyle(fontSize: 25)),
+                const SizedBox(width: 9),
+                Text(
+                  'Nota de Maya',
+                  style: K.body(17, color: K.moss, w: FontWeight.w900),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text('“$text”', style: K.serif(16)),
+            const SizedBox(height: 8),
+            Text(
+              '— Maya, guardiana del círculo',
+              style: K.body(12, color: K.muted),
+            ),
+          ],
+        ),
+      );
 }
 
 class _BosqueEcoScreen extends StatelessWidget {
