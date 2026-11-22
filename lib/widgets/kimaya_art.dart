@@ -84,6 +84,92 @@ class KimayaHeader extends StatelessWidget {
       );
 }
 
+class JournalHeader extends StatelessWidget {
+  const JournalHeader({super.key, required this.onSettings});
+
+  final VoidCallback onSettings;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final height = width / (890 / 200);
+    return ColoredBox(
+      color: K.night,
+      child: SafeArea(
+        bottom: false,
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                'assets/images/encabezado_diario_del_bosque.png',
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+                filterQuality: FilterQuality.none,
+                semanticLabel:
+                    'Diario del Bosque. Archivo de Maya, volumen uno',
+              ),
+              Positioned(
+                top: (height - 42) / 2,
+                right: 10,
+                child: Row(
+                  children: [
+                    _JournalHeaderButton(
+                      label: 'Ajustes y créditos',
+                      icon: Icons.settings_rounded,
+                      onTap: onSettings,
+                    ),
+                    const SizedBox(width: 7),
+                    const _JournalHeaderButton(label: 'Maya', emoji: '🧚'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _JournalHeaderButton extends StatelessWidget {
+  const _JournalHeaderButton({
+    required this.label,
+    this.icon,
+    this.emoji,
+    this.onTap,
+  });
+
+  final String label;
+  final IconData? icon;
+  final String? emoji;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: onTap != null,
+        label: label,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: 42,
+            height: 42,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFF0E332F),
+              border: Border.all(color: K.gold, width: 2),
+            ),
+            child: icon != null
+                ? Icon(icon, color: K.paper, size: 23)
+                : Text(emoji!, style: const TextStyle(fontSize: 22)),
+          ),
+        ),
+      );
+}
+
 class _RoundHeaderButton extends StatelessWidget {
   const _RoundHeaderButton({
     required this.tooltip,

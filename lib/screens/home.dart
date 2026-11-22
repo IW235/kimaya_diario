@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../state.dart';
-import '../theme.dart';
+import '../widgets/kimaya_art.dart';
 import 'settings.dart';
 import 'tabs.dart';
 
@@ -30,41 +30,20 @@ class _HomeShellState extends State<HomeShell> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 18,
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Diario del Bosque', style: K.title(12, color: K.paper)),
-          const SizedBox(height: 4),
-          Text('Archivo de Maya · Vol. I',
-              style: K.body(11, color: const Color(0xFFBBD7BE))),
-        ]),
-        actions: [
-          IconButton(
-            tooltip: 'Ajustes y créditos',
-            icon: const Icon(Icons.tune),
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => SettingsScreen(state: s))),
-          ),
-          Container(
-            width: 40,
-            height: 40,
-            margin: const EdgeInsets.only(right: 14),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFF38705A),
-              border: Border.all(color: K.gold, width: 2),
-            ),
-            child: const Text('🧚', style: TextStyle(fontSize: 22)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          JournalHeader(onSettings: () => _openSettings(context, s)),
+          Expanded(
+            child: IndexedStack(index: _i, children: [
+              const SizedBox.shrink(),
+              DiarioTab(state: s),
+              MundoTab(state: s),
+              ArchivoTab(state: s),
+            ]),
           ),
         ],
       ),
-      body: IndexedStack(index: _i, children: [
-        const SizedBox.shrink(),
-        DiarioTab(state: s),
-        MundoTab(state: s),
-        ArchivoTab(state: s),
-      ]),
       bottomNavigationBar: _navigationBar(),
     );
   }
