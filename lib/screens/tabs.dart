@@ -58,7 +58,10 @@ class InicioTab extends StatelessWidget {
                   ),
                   if (last != null) ...[
                     const FantasySectionTitle('Última página consultada'),
-                    PageTile(page: last, state: state),
+                    if (last.key == 'personaje_maya')
+                      _MayaArchiveCard(page: last, state: state)
+                    else
+                      PageTile(page: last, state: state),
                   ],
                   const FantasySectionTitle('Continúa explorando'),
                   ResponsiveExploreGrid(
