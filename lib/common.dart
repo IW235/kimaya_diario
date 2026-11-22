@@ -301,6 +301,9 @@ class DetailScreen extends StatelessWidget {
     final locked = page.locked;
     final spoiler = state.hidden(page);
     final covered = locked || spoiler;
+    if (!covered && page.key == 'lugar_bosque') {
+      return _BosqueEcoScreen(page: page);
+    }
     final status = state.statusFor(page);
     final heading = covered && page.category == 'capitulo'
         ? 'Capítulo ${page.order}'
@@ -380,4 +383,296 @@ class DetailScreen extends StatelessWidget {
       ]),
     );
   }
+}
+
+class _BosqueEcoScreen extends StatelessWidget {
+  const _BosqueEcoScreen({required this.page});
+
+  final DiaryPage page;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            '❧  Bosque del Eco  ❧',
+            style: K.title(10, color: K.paper),
+          ),
+        ),
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFFFF7DF), Color(0xFFF2DFAF)],
+            ),
+          ),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
+            children: [
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 820),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const _AncestralTreeHero(),
+                      const SizedBox(height: 12),
+                      Center(
+                        child: _ForestStatus(
+                          page.meta['Estado'] ?? 'Disponible',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _ForestDescription(text: page.body),
+                      if (page.note != null) ...[
+                        const SizedBox(height: 18),
+                        _ForestMayaNote(text: page.note!),
+                      ],
+                      const SizedBox(height: 18),
+                      const Text(
+                        '🌿     ✦     💎     ✦     🌿',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22, color: K.forest),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
+class _AncestralTreeHero extends StatelessWidget {
+  const _AncestralTreeHero();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            AspectRatio(
+              aspectRatio: 2.05,
+              child: Container(
+                clipBehavior: Clip.antiAlias,
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: K.gold, width: 3),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF0A4946), Color(0xFF102E27)],
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x44000000),
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Semantics(
+                  image: true,
+                  label: 'Árbol ancestral del Bosque del Eco',
+                  child: Image.asset(
+                    'assets/images/arbol_ancestral.png',
+                    fit: BoxFit.contain,
+                    alignment: Alignment.bottomCenter,
+                    filterQuality: FilterQuality.none,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 34,
+              right: 34,
+              bottom: -25,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: const Color(0xFFC98616), width: 2),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFFF8E4), Color(0xFFF3D898)],
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x33000000),
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'Bosque del Eco',
+                  textAlign: TextAlign.center,
+                  style: K.title(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _ForestStatus extends StatelessWidget {
+  const _ForestStatus(this.status);
+
+  final String status;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD9F2B8),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: const Color(0xFFA8CF73)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('🌱', style: TextStyle(fontSize: 16)),
+            const SizedBox(width: 7),
+            Text(
+              'Estado: $status',
+              style: K.body(13, color: K.forest, w: FontWeight.w900),
+            ),
+          ],
+        ),
+      );
+}
+
+class _ForestDescription extends StatelessWidget {
+  const _ForestDescription({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF8E6),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFFD99A22), width: 2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('📖', style: TextStyle(fontSize: 27)),
+                const SizedBox(width: 9),
+                Text('Descripción', style: K.title(9, color: K.forest)),
+              ],
+            ),
+            const Divider(color: Color(0xFFD99A22), height: 18),
+            Text(text, style: K.body(15)),
+          ],
+        ),
+      );
+}
+
+class _ForestMayaNote extends StatelessWidget {
+  const _ForestMayaNote({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) {
+          final portraitWidth = constraints.maxWidth >= 600 ? 180.0 : 104.0;
+          return Container(
+            clipBehavior: Clip.antiAlias,
+            padding: const EdgeInsets.fromLTRB(16, 13, 10, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFB7C77A), width: 2),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFFFBE9), Color(0xFFEAF4DB)],
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x22000000),
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDCECB9),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(color: const Color(0xFFAFC06B)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('🪶', style: TextStyle(fontSize: 18)),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Nota de Maya',
+                        style: K.body(
+                          13,
+                          color: K.forest,
+                          w: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('“$text”', style: K.serif(14)),
+                            const SizedBox(height: 7),
+                            Text(
+                              '— Maya, guardiana del círculo',
+                              style: K.body(11, color: K.muted),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Semantics(
+                      image: true,
+                      label: 'Retrato de Maya',
+                      child: Image.asset(
+                        'assets/images/maya_retrato_sin_fondo.png',
+                        width: portraitWidth,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.none,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      );
 }
