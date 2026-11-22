@@ -31,5 +31,8 @@ flutter:
     - assets/images/arbol_ancestral.png
     - assets/images/maya_retrato_sin_fondo.png
     - assets/images/encabezado_diario_del_bosque.png
+    - assets/images/registro_incompleto_01_conejo.png
+    - assets/images/registro_incompleto_02_ave.png
+    - assets/images/registro_incompleto_03_lobo.png
     - assets/images/runa_raices.png
     - assets/images/runa_bruma.png

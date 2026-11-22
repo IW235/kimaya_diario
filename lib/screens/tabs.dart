@@ -323,12 +323,271 @@ class ArchivoTab extends StatelessWidget {
               _list(state.all('personaje')),
               _list([...state.all('lugar'), ...state.all('region')]),
               _list(state.all('magia')),
-              _list(
-                [state.byKey('personaje_maya'), ...state.all('criatura')],
-                footer: 'El bestiario crecerá cuando Maya vea más.',
-              ),
+              _CreaturesArchive(state: state),
             ]),
           ),
         ]),
+      );
+}
+
+class _CreaturesArchive extends StatelessWidget {
+  const _CreaturesArchive({required this.state});
+
+  final AppState state;
+
+  static const _assets = [
+    'assets/images/registro_incompleto_01_conejo.png',
+    'assets/images/registro_incompleto_02_ave.png',
+    'assets/images/registro_incompleto_03_lobo.png',
+  ];
+
+  static const _subtitles = [
+    'Maya aún no ha visitado este lugar.',
+    'Se escucha algo detrás de la niebla.',
+    'El Zarzal cubre este registro.',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final creatures = state.all('criatura');
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 28),
+      children: [
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 760),
+            child: Column(
+              children: [
+                _MayaArchiveCard(
+                  page: state.byKey('personaje_maya'),
+                  state: state,
+                ),
+                const SizedBox(height: 12),
+                for (var i = 0;
+                    i < creatures.length && i < _assets.length;
+                    i++) ...[
+                  _IncompleteCreatureCard(
+                    page: creatures[i],
+                    state: state,
+                    asset: _assets[i],
+                    subtitle: _subtitles[i],
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+                  child: Row(
+                    children: [
+                      const Text('🌿', style: TextStyle(fontSize: 22)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'El bestiario crecerá cuando Maya vea más.',
+                          textAlign: TextAlign.center,
+                          style: K.serif(13, color: K.muted),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text('🌿', style: TextStyle(fontSize: 22)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MayaArchiveCard extends StatelessWidget {
+  const _MayaArchiveCard({required this.page, required this.state});
+
+  final DiaryPage page;
+  final AppState state;
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: const Color(0xFFE8F1D9),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: Color(0xFFD0A33A), width: 2),
+        ),
+        child: InkWell(
+          onTap: () => openPage(context, state, page),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final portraitWidth = constraints.maxWidth < 430 ? 110.0 : 145.0;
+              return ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 118),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: portraitWidth,
+                      height: 118,
+                      child: Image.asset(
+                        'assets/images/maya_retrato_sin_fondo.png',
+                        fit: BoxFit.contain,
+                        alignment: Alignment.bottomCenter,
+                        filterQuality: FilterQuality.none,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Maya',
+                            style: K.body(
+                              17,
+                              color: K.night,
+                              w: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            page.body,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: K.body(12, color: K.muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Icon(
+                        Icons.chevron_right_rounded,
+                        color: K.moss,
+                        size: 32,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+}
+
+class _IncompleteCreatureCard extends StatelessWidget {
+  const _IncompleteCreatureCard({
+    required this.page,
+    required this.state,
+    required this.asset,
+    required this.subtitle,
+  });
+
+  final DiaryPage page;
+  final AppState state;
+  final String asset;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) => Material(
+        color: K.bramble,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: K.gold, width: 2),
+        ),
+        child: InkWell(
+          onTap: () => openPage(context, state, page),
+          child: SizedBox(
+            height: 112,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final width = constraints.maxWidth;
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: width * .58,
+                      child: Image.asset(
+                        asset,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                        filterQuality: FilterQuality.none,
+                      ),
+                    ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [0, .35, .64],
+                          colors: [
+                            Colors.transparent,
+                            Color(0x4435243F),
+                            K.bramble,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: width * .43,
+                      right: 8,
+                      top: 0,
+                      bottom: 0,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Registro incompleto',
+                                  style: K.body(
+                                    16,
+                                    color: K.paper,
+                                    w: FontWeight.w900,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  subtitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: K.body(
+                                    12,
+                                    color: const Color(0xFFE1CBE8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(
+                            Icons.chevron_right_rounded,
+                            color: K.rose,
+                            size: 34,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Positioned(
+                      left: 6,
+                      top: 5,
+                      child: Text('🌿', style: TextStyle(fontSize: 20)),
+                    ),
+                    const Positioned(
+                      right: 5,
+                      bottom: 2,
+                      child: Text('🌿', style: TextStyle(fontSize: 19)),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
       );
 }
