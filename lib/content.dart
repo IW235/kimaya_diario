@@ -17,6 +17,8 @@ class DiaryPage {
     this.image,
     this.heroImage,
     this.emblem,
+    this.thumbnailImage,
+    this.lockedThumbnailImage,
   });
 
   final String key, category, title, emoji, body;
@@ -29,7 +31,7 @@ class DiaryPage {
   // Imagen del asset (assets/images/…). `image` es la miniatura de la lista
   // y `heroImage` la imagen grande de la ficha; si falta, se usa el emoji.
   // `emblem` es un emblema opcional (p. ej. Jardín de la Bruma).
-  final String? image, heroImage, emblem;
+  final String? image, heroImage, emblem, thumbnailImage, lockedThumbnailImage;
 
   DiaryPage copyWith({String? title, String? body, String? note}) => DiaryPage(
         key: key,
@@ -46,6 +48,8 @@ class DiaryPage {
         image: image,
         heroImage: heroImage,
         emblem: emblem,
+        thumbnailImage: thumbnailImage,
+        lockedThumbnailImage: lockedThumbnailImage,
       );
 }
 
@@ -59,7 +63,10 @@ const kCuriosities = [
 ];
 
 DiaryPage _chap(int n, String title, String emoji, String body,
-        {String? note, bool spoiler = false}) =>
+        {String? note,
+        bool spoiler = false,
+        String? thumbnailImage,
+        String? lockedThumbnailImage}) =>
     DiaryPage(
       key: 'capitulo_${n.toString().padLeft(2, '0')}',
       category: 'capitulo',
@@ -69,6 +76,8 @@ DiaryPage _chap(int n, String title, String emoji, String body,
       body: body,
       note: note,
       spoiler: spoiler,
+      thumbnailImage: thumbnailImage,
+      lockedThumbnailImage: lockedThumbnailImage,
     );
 
 final kPages = <DiaryPage>[
@@ -76,9 +85,11 @@ final kPages = <DiaryPage>[
   _chap(1, 'Una mañana como cualquier otra', '☀️',
       'Falin, Mia y Kiara pasaban la mañana como casi todas: juntas, entre juegos y pequeñas discusiones. Nada anunciaba que ese día el mundo se abriría bajo sus patas.'),
   _chap(2, 'La pelota entre los árboles', '⚽',
-      'La pelota rodó hasta el viejo tronco y se perdió entre los árboles. Ninguna de las tres imaginaba que el círculo despertaría.'),
+      'La pelota rodó hasta el viejo tronco y se perdió entre los árboles. Ninguna de las tres imaginaba que el círculo despertaría.',
+      thumbnailImage: 'assets/images/orbe_rojo_corona_hojas.png'),
   _chap(3, 'El círculo de hongos', '🍄',
-      'Los círculos de hongos son portales antiguos que casi siempre duermen. Para despertar necesitan un objeto que cruce primero, seres unidos por un vínculo y una emoción intensa. La pelota cruzó; después entraron las tres, con curiosidad, entusiasmo y preocupación.'),
+      'Los círculos de hongos son portales antiguos que casi siempre duermen. Para despertar necesitan un objeto que cruce primero, seres unidos por un vínculo y una emoción intensa. La pelota cruzó; después entraron las tres, con curiosidad, entusiasmo y preocupación.',
+      thumbnailImage: 'assets/images/icono_circulo_hongos.png'),
   _chap(4, 'La caída', '🌀',
       'El círculo las envolvió y el suelo dejó de ser suelo. Cuando la caída terminó, el aire olía a hojas húmedas y a algo que parecía escucharlas.'),
   _chap(5, 'El bosque que escucha', '👂',
@@ -86,24 +97,33 @@ final kPages = <DiaryPage>[
       note: kHomeQuote),
   _chap(6, 'La aparición del Zarzal', '🥀',
       'El Zarzal Sombrío se alimenta del miedo, la culpa, la desconfianza y los conflictos sin resolver. Se manifiesta con raíces oscuras, espinas, flores marchitas y susurros que exageran las dudas.',
+      thumbnailImage: 'assets/images/retrato_zarzal_sombrio.png',
       note:
           'El Zarzal nunca dice una mentira completa. Toma un miedo verdadero y lo hace crecer hasta que ocupa todo el camino. Se dice que nació de habitantes anteriores, otros dicen que fue la ruptura entre los guardianes primigenios, pero nadie conoce la historia verdadera.'),
   _chap(7, 'La desaparición de Kiara', '❓',
       'Entre raíces y sombras, Kiara dejó de estar con sus hermanas. Falin y Mia se quedaron en el círculo, sin saber por dónde empezar.'),
   _chap(8, 'La guardiana del círculo', '🧚',
-      'Maya es una pequeña hada encargada de proteger el círculo central y registrar los cambios del bosque. Conoce muchas reglas, pero no todas: algunas páginas de su diario han desaparecido.'),
+      'Maya es una pequeña hada encargada de proteger el círculo central y registrar los cambios del bosque. Conoce muchas reglas, pero no todas: algunas páginas de su diario han desaparecido.',
+      thumbnailImage: 'assets/images/retrato_maya.png'),
   _chap(9, 'El Sendero de las Raíces', '🌱',
       'La conexión con el sendero está demasiado dañada para que crucen las dos hermanas a la vez. Una cruza; la otra mantiene abierto el vínculo desde el círculo.',
+      thumbnailImage: 'assets/images/runa_raices.png',
       note:
           'Sola en el sendero, quizá. Pero nunca estarán solas mientras crean una en la otra.'),
   _chap(10, 'El rescate', '🔓',
       'La hermana que cruzó asciende por saltos de precisión hasta encontrar a Kiara rodeada de raíces oscuras. Desde el círculo, la otra mantiene la conexión: la luz recorre el sendero, debilita las raíces y libera a Kiara, que reconoce el esfuerzo de ambas.',
+      thumbnailImage: 'assets/images/puerta_ancestral_candado_magico.png',
+      lockedThumbnailImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       spoiler: true),
   _chap(11, 'La primera runa', '✦',
       'Las tres hermanas se reúnen frente al círculo y la energía recuperada en el Sendero de las Raíces activa la primera runa. Las otras tres siguen apagadas.',
+      thumbnailImage: 'assets/images/cristal_purpura_espinas.png',
+      lockedThumbnailImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       spoiler: true),
   _chap(12, 'Tres caminos pendientes', '🛤️',
       'Una conexión ha despertado, pero el círculo sigue incompleto. Quedan tres caminos por recorrer.',
+      thumbnailImage: 'assets/images/llave_magica_enredaderas_moradas.png',
+      lockedThumbnailImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       note:
           'El bosque todavía guarda tres caminos… y sospecho que ninguno permitirá que pasen sin cambiar.',
       spoiler: true),

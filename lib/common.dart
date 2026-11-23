@@ -65,7 +65,7 @@ class PageImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final src = page.image;
+    final src = page.thumbnailImage ?? page.image;
     if (src == null) {
       return Container(
         width: width,
@@ -399,6 +399,7 @@ class PageTile extends StatelessWidget {
         : (page.meta['Papel'] ??
             page.meta['Estado'] ??
             (page.key == 'personaje_zarzal' ? 'Activo' : null));
+    final coveredThumbnail = page.lockedThumbnailImage ?? page.emblem;
     return PaperCard(
       color: covered ? K.bramble : K.card,
       onTap: () => openPage(context, state, page),
@@ -410,11 +411,11 @@ class PageTile extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: K.violet, borderRadius: BorderRadius.circular(10)),
-            child: page.emblem != null
+            child: coveredThumbnail != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
-                      page.emblem!,
+                      coveredThumbnail,
                       width: 64,
                       height: 64,
                       fit: BoxFit.cover,
