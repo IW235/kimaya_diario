@@ -200,7 +200,19 @@ class _WorldMap extends StatelessWidget {
                         ]
                       : null,
                 ),
-                child: const Text('🍄', style: TextStyle(fontSize: 34)),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/icono_circulo_hongos.png',
+                    width: 68,
+                    height: 68,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                    semanticLabel: 'Círculo central de hongos',
+                    errorBuilder: (_, __, ___) => const Center(
+                      child: Text('🍄', style: TextStyle(fontSize: 34)),
+                    ),
+                  ),
+                ),
               ),
             ),
             for (var i = 0; i < regions.length && i < 4; i++)
@@ -246,9 +258,11 @@ class _Node extends StatelessWidget {
               opacity: open ? 1 : .55,
               child: page.image != null
                   ? Image.asset(page.image!,
-                      width: 66, height: 66, fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          Text(page.emoji, style: const TextStyle(fontSize: 30)))
+                      width: 66,
+                      height: 66,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Text(page.emoji,
+                          style: const TextStyle(fontSize: 30)))
                   : Text(page.emoji, style: const TextStyle(fontSize: 30)),
             ),
           ),

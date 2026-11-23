@@ -498,6 +498,7 @@ class DetailScreen extends StatelessWidget {
       return _ChapterDetailScreen(page: page);
     }
     const illustratedPages = {
+      'region_sendero',
       'lugar_circulo_hongos',
       'lugar_circulo_central',
       'lugar_sendero_raices',
