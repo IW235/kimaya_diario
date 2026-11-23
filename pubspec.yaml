@@ -22,5 +22,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/fonts/
     - assets/video/inicio_app.mp4
     - assets/images/
