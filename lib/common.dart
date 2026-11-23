@@ -410,7 +410,21 @@ class PageTile extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: K.violet, borderRadius: BorderRadius.circular(10)),
-            child: const Text('🌫️', style: TextStyle(fontSize: 24)),
+            child: page.emblem != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      page.emblem!,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.medium,
+                      errorBuilder: (_, __, ___) => const Center(
+                        child: Text('🌫️', style: TextStyle(fontSize: 24)),
+                      ),
+                    ),
+                  )
+                : const Text('🌫️', style: TextStyle(fontSize: 24)),
           )
         else
           PageImage(page, width: 64, height: 64, borderRadius: 10),
