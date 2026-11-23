@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'config.dart';
@@ -9,7 +12,23 @@ import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(url: kSupabaseUrl, anonKey: kSupabasePublishableKey);
+  GoogleFonts.config.allowRuntimeFetching = false;
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks(
+      ['Nunito'],
+      await rootBundle.loadString('assets/fonts/Nunito-OFL.txt'),
+    );
+    yield LicenseEntryWithLineBreaks(
+      ['Lora'],
+      await rootBundle.loadString('assets/fonts/Lora-OFL.txt'),
+    );
+    yield LicenseEntryWithLineBreaks(
+      ['Press Start 2P'],
+      await rootBundle.loadString('assets/fonts/PressStart2P-OFL.txt'),
+    );
+  });
+  await Supabase.initialize(
+      url: kSupabaseUrl, anonKey: kSupabasePublishableKey);
   final state = AppState();
   await state.load();
   runApp(KimayaApp(state: state));
