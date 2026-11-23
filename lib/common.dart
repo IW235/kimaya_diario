@@ -479,6 +479,22 @@ class DetailScreen extends StatelessWidget {
     if (!covered && page.key == 'lugar_bosque') {
       return _BosqueEcoScreen(page: page);
     }
+    const illustratedPages = {
+      'lugar_circulo_hongos',
+      'lugar_circulo_central',
+      'lugar_sendero_raices',
+      'magia_pelota',
+      'magia_runas',
+      'magia_portales',
+      'magia_diario',
+      'magia_raices',
+    };
+    if (!covered && illustratedPages.contains(page.key)) {
+      return _IllustratedArchiveScreen(
+        page: page,
+        status: state.statusFor(page) ?? page.meta['Estado'],
+      );
+    }
     if (!covered && page.key == 'personaje_maya') {
       return _MayaDetailScreen(
         page: page,
@@ -1175,5 +1191,287 @@ class _ForestMayaNote extends StatelessWidget {
             ),
           );
         },
+      );
+}
+
+class _IllustratedArchiveScreen extends StatelessWidget {
+  const _IllustratedArchiveScreen({required this.page, this.status});
+
+  final DiaryPage page;
+  final String? status;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            '❧  ${page.title}  ❧',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: K.title(10, color: K.paper),
+          ),
+        ),
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFFFF7DF), Color(0xFFF2DFAF)],
+            ),
+          ),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
+            children: [
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 820),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _IllustratedArchiveHero(page: page),
+                      if (status != null) ...[
+                        const SizedBox(height: 12),
+                        Center(child: _ForestStatus(status!)),
+                      ],
+                      const SizedBox(height: 16),
+                      _ForestDescription(text: page.body),
+                      if (page.meta.entries
+                          .any((entry) => entry.key != 'Estado')) ...[
+                        const SizedBox(height: 16),
+                        _ArchiveDetailsPanel(
+                          title: 'Detalles',
+                          icon: '✦',
+                          entries: page.meta.entries
+                              .where((entry) => entry.key != 'Estado')
+                              .toList(),
+                        ),
+                      ],
+                      for (final entry in page.lists.entries) ...[
+                        const SizedBox(height: 16),
+                        _ArchiveListPanel(
+                          title: entry.key,
+                          values: entry.value,
+                        ),
+                      ],
+                      if (page.note != null) ...[
+                        const SizedBox(height: 18),
+                        _ForestMayaNote(text: page.note!),
+                      ],
+                      const SizedBox(height: 18),
+                      const Text(
+                        '🌿     ✦     💎     ✦     🌿',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22, color: K.forest),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
+class _IllustratedArchiveHero extends StatelessWidget {
+  const _IllustratedArchiveHero({required this.page});
+
+  final DiaryPage page;
+
+  @override
+  Widget build(BuildContext context) {
+    final asset = page.heroImage ?? page.image;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 25),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          AspectRatio(
+            aspectRatio: 2.05,
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: K.gold, width: 3),
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF0A4946), Color(0xFF102E27)],
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x44000000),
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: asset == null
+                  ? Center(
+                      child: Text(
+                        page.emoji,
+                        style: const TextStyle(fontSize: 72),
+                      ),
+                    )
+                  : Image.asset(
+                      asset,
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                      filterQuality: FilterQuality.none,
+                      errorBuilder: (_, __, ___) => Center(
+                        child: Text(
+                          page.emoji,
+                          style: const TextStyle(fontSize: 72),
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          Positioned(
+            left: 34,
+            right: 34,
+            bottom: -25,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: const Color(0xFFC98616), width: 2),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFFF8E4), Color(0xFFF3D898)],
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x33000000),
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Text(
+                page.title,
+                textAlign: TextAlign.center,
+                style: K.title(10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ArchiveDetailsPanel extends StatelessWidget {
+  const _ArchiveDetailsPanel({
+    required this.title,
+    required this.icon,
+    required this.entries,
+  });
+
+  final String title;
+  final String icon;
+  final List<MapEntry<String, String>> entries;
+
+  @override
+  Widget build(BuildContext context) => _ArchivePanel(
+        title: title,
+        icon: icon,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < entries.length; i++) ...[
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${entries[i].key}: ',
+                      style: K.body(13, color: K.forest, w: FontWeight.w900),
+                    ),
+                    TextSpan(text: entries[i].value, style: K.body(13)),
+                  ],
+                ),
+              ),
+              if (i < entries.length - 1) const SizedBox(height: 8),
+            ],
+          ],
+        ),
+      );
+}
+
+class _ArchiveListPanel extends StatelessWidget {
+  const _ArchiveListPanel({required this.title, required this.values});
+
+  final String title;
+  final List<String> values;
+
+  @override
+  Widget build(BuildContext context) => _ArchivePanel(
+        title: title,
+        icon: '🌿',
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final value in values)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE6F0CF),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: const Color(0xFFB7C77A)),
+                ),
+                child: Text(
+                  value,
+                  style: K.body(12, color: K.forest, w: FontWeight.w800),
+                ),
+              ),
+          ],
+        ),
+      );
+}
+
+class _ArchivePanel extends StatelessWidget {
+  const _ArchivePanel({
+    required this.title,
+    required this.icon,
+    required this.child,
+  });
+
+  final String title;
+  final String icon;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 18),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF8E6),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: const Color(0xFFD99A22), width: 2),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(icon, style: const TextStyle(fontSize: 25)),
+                const SizedBox(width: 9),
+                Expanded(
+                  child: Text(title, style: K.title(9, color: K.forest)),
+                ),
+              ],
+            ),
+            const Divider(color: Color(0xFFD99A22), height: 18),
+            child,
+          ],
+        ),
       );
 }
