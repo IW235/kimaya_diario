@@ -94,7 +94,8 @@ final kPages = <DiaryPage>[
       'Maya es una pequeña hada encargada de proteger el círculo central y registrar los cambios del bosque. Conoce muchas reglas, pero no todas: algunas páginas de su diario han desaparecido.'),
   _chap(9, 'El Sendero de las Raíces', '🌱',
       'La conexión con el sendero está demasiado dañada para que crucen las dos hermanas a la vez. Una cruza; la otra mantiene abierto el vínculo desde el círculo.',
-      note: 'Sola en el sendero, quizá. Pero nunca estarán solas mientras crean una en la otra.'),
+      note:
+          'Sola en el sendero, quizá. Pero nunca estarán solas mientras crean una en la otra.'),
   _chap(10, 'El rescate', '🔓',
       'La hermana que cruzó asciende por saltos de precisión hasta encontrar a Kiara rodeada de raíces oscuras. Desde el círculo, la otra mantiene la conexión: la luz recorre el sendero, debilita las raíces y libera a Kiara, que reconoce el esfuerzo de ambas.',
       spoiler: true),
@@ -136,6 +137,7 @@ final kPages = <DiaryPage>[
     emoji: '💧',
     image: 'assets/images/laguna_de_los_reflejos.png',
     heroImage: 'assets/images/laguna_de_los_reflejos.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
     order: 2,
     locked: true,
     note:
@@ -148,6 +150,7 @@ final kPages = <DiaryPage>[
     emoji: '🍃',
     image: 'assets/images/copas_del_susurro.png',
     heroImage: 'assets/images/copas_del_susurro.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
     order: 3,
     locked: true,
     note:
@@ -179,13 +182,23 @@ final kPages = <DiaryPage>[
       'Posición': 'La menor de las tres',
       'Papel': 'Jugable en la demo',
       'Personalidad': 'Atlética, valiente, enérgica e impulsiva',
-      'Relación': 'Cree que ser la primera en avanzar es su manera de proteger a sus hermanas.',
+      'Relación':
+          'Cree que ser la primera en avanzar es su manera de proteger a sus hermanas.',
     },
     body:
         'Falin suele actuar antes de pensar porque confía en su capacidad para reaccionar ante cualquier problema. Su mayor temor es descubrir que su impulso pueda lastimar a alguien que quiere.',
     lists: {
-      'Fortalezas': ['Determinación', 'Valentía', 'Energía', 'Actúa bajo presión'],
-      'Dificultades': ['Impaciencia', 'Exceso de confianza', 'No sabe cuándo detenerse'],
+      'Fortalezas': [
+        'Determinación',
+        'Valentía',
+        'Energía',
+        'Actúa bajo presión'
+      ],
+      'Dificultades': [
+        'Impaciencia',
+        'Exceso de confianza',
+        'No sabe cuándo detenerse'
+      ],
     },
     note:
         'Falin mira una montaña y piensa inmediatamente en llegar a la cima. Todavía está aprendiendo que observar y disfrutar el camino también forma parte del viaje.',
@@ -206,8 +219,18 @@ final kPages = <DiaryPage>[
     body:
         'Mia percibe detalles que otras personas ignoran, pero algunas veces duda antes de compartir lo que sabe. Su arco consiste en confiar en sus capacidades y hacerse escuchar sin necesitar demostrar que puede hacerlo todo sola.',
     lists: {
-      'Fortalezas': ['Observación', 'Sensibilidad', 'Curiosidad', 'Detecta cambios'],
-      'Dificultades': ['Inseguridad', 'Temor a equivocarse', 'Guarda silencio si se siente ignorada', 'Temor a no ser suficiente'],
+      'Fortalezas': [
+        'Observación',
+        'Sensibilidad',
+        'Curiosidad',
+        'Detecta cambios'
+      ],
+      'Dificultades': [
+        'Inseguridad',
+        'Temor a equivocarse',
+        'Guarda silencio si se siente ignorada',
+        'Temor a no ser suficiente'
+      ],
     },
     note:
         'Mia escucha cosas que el bosque apenas empieza a pronunciar. El problema es que no siempre confía en su propia voz.',
@@ -224,15 +247,26 @@ final kPages = <DiaryPage>[
       'Posición': 'La mayor de las tres',
       'Papel': 'No jugable en la demo',
       'Personalidad': 'Inteligente, prudente, paciente y protectora',
-      'Relación': 'Intenta detener las discusiones y evitar que sus hermanas corran riesgos.',
+      'Relación':
+          'Intenta detener las discusiones y evitar que sus hermanas corran riesgos.',
     },
     body:
         'Kiara se considera responsable de sus hermanas. Su deseo de protegerlas también puede convertirse en una dificultad: a veces resuelve los problemas de las demás en lugar de dejar que aprendan por sí mismas.',
     lists: {
-      'Fortalezas': ['Experiencia', 'Prudencia', 'Empatía', 'Mantiene unida a la familia'],
-      'Dificultades': ['Exceso de responsabilidad', 'Miedo a no poder proteger', 'Oculta sus preocupaciones'],
+      'Fortalezas': [
+        'Experiencia',
+        'Prudencia',
+        'Empatía',
+        'Mantiene unida a la familia'
+      ],
+      'Dificultades': [
+        'Exceso de responsabilidad',
+        'Miedo a no poder proteger',
+        'Oculta sus preocupaciones'
+      ],
     },
-    note: 'Quienes cuidan de todos suelen olvidar que también tienen derecho a sentir miedo y ser cuidados.',
+    note:
+        'Quienes cuidan de todos suelen olvidar que también tienen derecho a sentir miedo y ser cuidados.',
   ),
   const DiaryPage(
     key: 'personaje_maya',
@@ -248,10 +282,21 @@ final kPages = <DiaryPage>[
     body:
         'Maya conoce las reglas del Bosque del Eco, pero ha perdido parte de sus registros y memoria por el crecimiento del Zarzal Sombrío. Sus páginas combinan información, recuerdos, teorías y comentarios personales.',
     lists: {
-      'Personalidad': ['Amable y expresiva', 'Algo desordenada', 'Responsable ante el peligro', 'Curiosa del mundo humano'],
-      'Limitaciones': ['No se aleja del círculo', 'Su magia se debilita en zonas corrompidas', 'No supera las pruebas por los visitantes', 'No sabe cómo nació el Zarzal'],
+      'Personalidad': [
+        'Amable y expresiva',
+        'Algo desordenada',
+        'Responsable ante el peligro',
+        'Curiosa del mundo humano'
+      ],
+      'Limitaciones': [
+        'No se aleja del círculo',
+        'Su magia se debilita en zonas corrompidas',
+        'No supera las pruebas por los visitantes',
+        'No sabe cómo nació el Zarzal'
+      ],
     },
-    note: 'Sí, yo también tengo una página. No, no es vanidad. Un buen archivo debe ser completo.',
+    note:
+        'Sí, yo también tengo una página. No, no es vanidad. Un buen archivo debe ser completo.',
   ),
   const DiaryPage(
     key: 'personaje_zarzal',
@@ -267,7 +312,15 @@ final kPages = <DiaryPage>[
     body:
         'El Zarzal responde a emociones negativas y las convierte en obstáculos físicos. No se conoce si posee inteligencia propia. Su forma definitiva sigue sin mostrarse: solo raíces y sombras.',
     lists: {
-      'Se manifiesta como': ['Raíces oscuras', 'Espinas', 'Flores marchitas', 'Sombras entre los árboles', 'Criaturas cubiertas por ramas', 'Caminos que cambian', 'Susurros'],
+      'Se manifiesta como': [
+        'Raíces oscuras',
+        'Espinas',
+        'Flores marchitas',
+        'Sombras entre los árboles',
+        'Criaturas cubiertas por ramas',
+        'Caminos que cambian',
+        'Susurros'
+      ],
     },
     note: 'El Zarzal nunca dice una mentira completa.',
   ),
@@ -301,9 +354,14 @@ final kPages = <DiaryPage>[
     body:
         'Portales antiguos que conectan el Bosque del Eco con otros mundos. Para activarse necesitan un objeto que cruce primero, seres vivos unidos por un vínculo emocional y una emoción suficientemente intensa.',
     lists: {
-      'Rasgos del lugar': ['Portales', 'Vínculo emocional', 'Requiere un objeto'],
+      'Rasgos del lugar': [
+        'Portales',
+        'Vínculo emocional',
+        'Requiere un objeto'
+      ],
     },
-    note: 'Los círculos no solo abren caminos, también ponen a prueba lo que los une.',
+    note:
+        'Los círculos no solo abren caminos, también ponen a prueba lo que los une.',
   ),
   const DiaryPage(
     key: 'lugar_circulo_central',
@@ -315,9 +373,14 @@ final kPages = <DiaryPage>[
     body:
         'El punto al que llegan las tres hermanas y el único lugar desde el que pueden regresar a casa. El Zarzal debilitó sus cuatro runas y cerró las conexiones que permitirían activarlo por completo.',
     lists: {
-      'Rasgos del lugar': ['Punto de retorno', 'Cuatro runas', 'Conexión bloqueada'],
+      'Rasgos del lugar': [
+        'Punto de retorno',
+        'Cuatro runas',
+        'Conexión bloqueada'
+      ],
     },
-    note: 'Regresar a casa todavía es posible… pero primero debemos recuperar el equilibrio.',
+    note:
+        'Regresar a casa todavía es posible… pero primero debemos recuperar el equilibrio.',
   ),
   const DiaryPage(
     key: 'lugar_sendero_raices',
@@ -346,6 +409,7 @@ final kPages = <DiaryPage>[
     emoji: '💧',
     image: 'assets/images/lugar_laguna_reflejos.png',
     heroImage: 'assets/images/laguna_de_los_reflejos.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
     meta: {'Estado': 'Por descubrir'},
     locked: true,
     note:
@@ -358,6 +422,7 @@ final kPages = <DiaryPage>[
     emoji: '🍃',
     image: 'assets/images/lugar_copas_susurros.png',
     heroImage: 'assets/images/copas_del_susurro.png',
+    emblem: 'assets/images/emblema_niebla_encantada.png',
     meta: {'Estado': 'Por descubrir'},
     locked: true,
     note:
@@ -376,7 +441,11 @@ final kPages = <DiaryPage>[
     body:
         'Un jardín oculto donde la bruma nunca se disipa. Sus senderos cambian, las formas se confunden y los recuerdos parecen mezclarse con el paisaje. Dicen que aquí habitan las palabras que nadie se atrevió a decir.',
     lists: {
-      'Peligros conocidos': ['Confusión', 'Ecos del pasado', 'Senderos cambiantes'],
+      'Peligros conocidos': [
+        'Confusión',
+        'Ecos del pasado',
+        'Senderos cambiantes'
+      ],
     },
     note: 'No sigas una voz si no puedes ver quién llama.',
   ),
@@ -389,7 +458,8 @@ final kPages = <DiaryPage>[
     emoji: '⚽',
     image: 'assets/images/pelota_roja_escena.png',
     heroImage: 'assets/images/pelota_roja_escena.png',
-    body: 'El primer detonante. Cruzó el círculo antes que nadie y lo despertó.',
+    body:
+        'El primer detonante. Cruzó el círculo antes que nadie y lo despertó.',
     note: 'Parece solo una pelota… pero fue la chispa que puso en marcha todo.',
   ),
   const DiaryPage(
@@ -412,7 +482,8 @@ final kPages = <DiaryPage>[
     emoji: '🌀',
     image: 'assets/images/portales_escena.png',
     heroImage: 'assets/images/portales_escena.png',
-    body: 'Pasajes antiguos entre mundos. Normalmente duermen, y solo despiertan cuando se juntan las tres condiciones.',
+    body:
+        'Pasajes antiguos entre mundos. Normalmente duermen, y solo despiertan cuando se juntan las tres condiciones.',
   ),
   const DiaryPage(
     key: 'magia_diario',
@@ -421,8 +492,10 @@ final kPages = <DiaryPage>[
     emoji: '📖',
     image: 'assets/images/diario_de_maya_escena.png',
     heroImage: 'assets/images/diario_de_maya_escena.png',
-    body: 'Es donde estás ahora. Algunas páginas antiguas han desaparecido y Maya no recuerda cómo.',
-    note: 'Algunas páginas están completas. Otras… bueno, será mejor que las descubramos juntos.',
+    body:
+        'Es donde estás ahora. Algunas páginas antiguas han desaparecido y Maya no recuerda cómo.',
+    note:
+        'Algunas páginas están completas. Otras… bueno, será mejor que las descubramos juntos.',
   ),
   const DiaryPage(
     key: 'magia_raices',
@@ -431,11 +504,33 @@ final kPages = <DiaryPage>[
     emoji: '🕸️',
     image: 'assets/images/raices_corrompidas_escena.png',
     heroImage: 'assets/images/raices_corrompidas_escena.png',
-    body: 'Una manifestación del Zarzal. Toman un miedo verdadero y lo hacen crecer hasta ocupar todo el camino.',
+    body:
+        'Una manifestación del Zarzal. Toman un miedo verdadero y lo hacen crecer hasta ocupar todo el camino.',
   ),
 
   // ---------------- Criaturas (registro incompleto) ----------------
-  const DiaryPage(key: 'criatura_1', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_01_conejo.png', heroImage: 'assets/images/registro_incompleto_01_conejo.png', locked: true),
-  const DiaryPage(key: 'criatura_2', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_02_ave.png', heroImage: 'assets/images/registro_incompleto_02_ave.png', locked: true),
-  const DiaryPage(key: 'criatura_3', category: 'criatura', title: 'Registro incompleto', emoji: '🌫️', image: 'assets/images/registro_incompleto_03_lobo.png', heroImage: 'assets/images/registro_incompleto_03_lobo.png', locked: true),
+  const DiaryPage(
+      key: 'criatura_1',
+      category: 'criatura',
+      title: 'Registro incompleto',
+      emoji: '🌫️',
+      image: 'assets/images/registro_incompleto_01_conejo.png',
+      heroImage: 'assets/images/registro_incompleto_01_conejo.png',
+      locked: true),
+  const DiaryPage(
+      key: 'criatura_2',
+      category: 'criatura',
+      title: 'Registro incompleto',
+      emoji: '🌫️',
+      image: 'assets/images/registro_incompleto_02_ave.png',
+      heroImage: 'assets/images/registro_incompleto_02_ave.png',
+      locked: true),
+  const DiaryPage(
+      key: 'criatura_3',
+      category: 'criatura',
+      title: 'Registro incompleto',
+      emoji: '🌫️',
+      image: 'assets/images/registro_incompleto_03_lobo.png',
+      heroImage: 'assets/images/registro_incompleto_03_lobo.png',
+      locked: true),
 ];

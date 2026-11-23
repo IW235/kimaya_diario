@@ -115,7 +115,8 @@ class HeroImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: K.gold, width: 2),
         boxShadow: const [
-          BoxShadow(color: Color(0x40000000), blurRadius: 8, offset: Offset(0, 3))
+          BoxShadow(
+              color: Color(0x40000000), blurRadius: 8, offset: Offset(0, 3))
         ],
       ),
       child: ClipRRect(
@@ -150,8 +151,8 @@ class Badge extends StatelessWidget {
           color: dark ? K.forest : const Color(0xFF2F624C),
           borderRadius: BorderRadius.circular(999),
         ),
-        child: Text(text,
-            style: K.body(11, color: K.paper, w: FontWeight.w800)),
+        child:
+            Text(text, style: K.body(11, color: K.paper, w: FontWeight.w800)),
       );
 }
 
@@ -239,7 +240,8 @@ class MayaNote extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: K.body(12, color: K.moss, w: FontWeight.w800)),
+                  Text(label,
+                      style: K.body(12, color: K.moss, w: FontWeight.w800)),
                   const SizedBox(height: 6),
                   Text('“$text”', style: K.serif(15)),
                   const SizedBox(height: 6),
@@ -255,8 +257,11 @@ class MayaNote extends StatelessWidget {
 
 /// Página dañada: así se ve lo que sigue "Por descubrir" (no es un botón apagado).
 class Cover extends StatelessWidget {
-  const Cover(this.text, {super.key});
+  const Cover(this.text, {super.key, this.title});
+
   final String text;
+  final String? title;
+
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
@@ -269,9 +274,35 @@ class Cover extends StatelessWidget {
               colors: [K.bramble, K.violet]),
         ),
         child: Column(children: [
-          const Text('🕸️', style: TextStyle(fontSize: 34)),
-          const SizedBox(height: 10),
-          Text('Por descubrir', style: K.title(11, color: K.rose)),
+          if (title != null) ...[
+            Text(
+              title!,
+              textAlign: TextAlign.center,
+              style: K.title(15, color: K.paper),
+            ),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+              decoration: BoxDecoration(
+                color: K.magenta.withValues(alpha: .15),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: K.magenta, width: 2),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.lock_rounded, color: K.paper, size: 19),
+                  const SizedBox(width: 8),
+                  Text('Por descubrir',
+                      style: K.body(13, color: K.paper, w: FontWeight.w800)),
+                ],
+              ),
+            ),
+          ] else ...[
+            const Text('🕸️', style: TextStyle(fontSize: 34)),
+            const SizedBox(height: 10),
+            Text('Por descubrir', style: K.title(11, color: K.rose)),
+          ],
           const SizedBox(height: 10),
           Text(text,
               textAlign: TextAlign.center, style: K.body(14, color: K.paper)),
@@ -358,7 +389,9 @@ class PageTile extends StatelessWidget {
         : (isChapter ? '${page.order}. ${page.title}' : page.title);
     final sub = covered
         ? coverText(page.key)
-        : (page.body.isNotEmpty ? page.body : (page.meta['Papel'] ?? page.meta['Estado'] ?? ''));
+        : (page.body.isNotEmpty
+            ? page.body
+            : (page.meta['Papel'] ?? page.meta['Estado'] ?? ''));
     // Badge como en la inspiración: "Jugable en la demo" / "No jugable en la
     // demo" (Papel) o el Estado del lugar. Zarzal usa su estado ("Activo").
     final badge = covered
@@ -383,12 +416,14 @@ class PageTile extends StatelessWidget {
           PageImage(page, width: 64, height: 64, borderRadius: 10),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
               Flexible(
                 child: Text(title,
                     style: K.body(15,
-                        color: covered ? K.paper : K.night, w: FontWeight.w800)),
+                        color: covered ? K.paper : K.night,
+                        w: FontWeight.w800)),
               ),
               if (badge != null) ...[
                 const SizedBox(width: 8),
@@ -465,7 +500,21 @@ class DetailScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: K.magenta, width: 2),
               ),
-              child: const Text('🌫️', style: TextStyle(fontSize: 38)),
+              child: page.emblem != null
+                  ? ClipOval(
+                      child: Image.asset(
+                        page.emblem!,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.medium,
+                        errorBuilder: (_, __, ___) => const Text(
+                          '🌫️',
+                          style: TextStyle(fontSize: 38),
+                        ),
+                      ),
+                    )
+                  : const Text('🌫️', style: TextStyle(fontSize: 38)),
             ),
           ),
         if (!covered) ...[
@@ -484,28 +533,13 @@ class DetailScreen extends StatelessWidget {
           const SizedBox(height: 10),
         ],
         if (covered) ...[
-          Cover(coverText(page.key)),
+          Cover(
+            coverText(page.key),
+            title: page.emblem != null ? page.title : null,
+          ),
           const SizedBox(height: 12),
-          // El Jardín de la Bruma lleva su emblema aunque esté por descubrir.
-          if (page.emblem != null) ...[
-            Center(
-              child: Column(children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(page.emblem!,
-                      width: 180,
-                      height: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const SizedBox.shrink()),
-                ),
-                const SizedBox(height: 6),
-                Text('Emblema de niebla encantada',
-                    style: K.body(12, color: K.muted, w: FontWeight.w800)),
-              ]),
-            ),
-            const SizedBox(height: 12),
-          ],
-          if (locked && page.note != null) MayaNote(page.note!, label: 'Adelanto de Maya'),
+          if (locked && page.note != null)
+            MayaNote(page.note!, label: 'Adelanto de Maya'),
           if (spoiler)
             FilledButton(
               onPressed: () async {
@@ -524,19 +558,15 @@ class DetailScreen extends StatelessWidget {
           if (page.emblem != null) ...[
             const SizedBox(height: 12),
             Center(
-              child: Column(children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(page.emblem!,
-                      width: 180,
-                      height: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const SizedBox.shrink()),
+              child: ClipOval(
+                child: Image.asset(
+                  page.emblem!,
+                  width: 84,
+                  height: 84,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
-                const SizedBox(height: 6),
-                Text('Emblema de niebla encantada',
-                    style: K.body(12, color: K.muted, w: FontWeight.w800)),
-              ]),
+              ),
             ),
           ],
           const SizedBox(height: 14),
