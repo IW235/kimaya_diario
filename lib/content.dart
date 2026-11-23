@@ -59,7 +59,7 @@ const kCuriosities = [
 ];
 
 DiaryPage _chap(int n, String title, String emoji, String body,
-        {String? note, bool spoiler = false}) =>
+        {String? note, bool spoiler = false, String? image, String? heroImage}) =>
     DiaryPage(
       key: 'capitulo_${n.toString().padLeft(2, '0')}',
       category: 'capitulo',
@@ -69,6 +69,8 @@ DiaryPage _chap(int n, String title, String emoji, String body,
       body: body,
       note: note,
       spoiler: spoiler,
+      image: image,
+      heroImage: heroImage ?? image,
     );
 
 final kPages = <DiaryPage>[
@@ -76,7 +78,8 @@ final kPages = <DiaryPage>[
   _chap(1, 'Una mañana como cualquier otra', '☀️',
       'Falin, Mia y Kiara pasaban la mañana como casi todas: juntas, entre juegos y pequeñas discusiones. Nada anunciaba que ese día el mundo se abriría bajo sus patas.'),
   _chap(2, 'La pelota entre los árboles', '⚽',
-      'La pelota rodó hasta el viejo tronco y se perdió entre los árboles. Ninguna de las tres imaginaba que el círculo despertaría.'),
+      'La pelota rodó hasta el viejo tronco y se perdió entre los árboles. Ninguna de las tres imaginaba que el círculo despertaría.',
+      image: 'assets/images/pelota_roja_escena.png'),
   _chap(3, 'El círculo de hongos', '🍄',
       'Los círculos de hongos son portales antiguos que casi siempre duermen. Para despertar necesitan un objeto que cruce primero, seres unidos por un vínculo y una emoción intensa. La pelota cruzó; después entraron las tres, con curiosidad, entusiasmo y preocupación.'),
   _chap(4, 'La caída', '🌀',
@@ -86,14 +89,17 @@ final kPages = <DiaryPage>[
       note: kHomeQuote),
   _chap(6, 'La aparición del Zarzal', '🥀',
       'El Zarzal Sombrío se alimenta del miedo, la culpa, la desconfianza y los conflictos sin resolver. Se manifiesta con raíces oscuras, espinas, flores marchitas y susurros que exageran las dudas.',
+      image: 'assets/images/retrato_zarzal_sombrio.png',
       note:
           'El Zarzal nunca dice una mentira completa. Toma un miedo verdadero y lo hace crecer hasta que ocupa todo el camino. Se dice que nació de habitantes anteriores, otros dicen que fue la ruptura entre los guardianes primigenios, pero nadie conoce la historia verdadera.'),
   _chap(7, 'La desaparición de Kiara', '❓',
       'Entre raíces y sombras, Kiara dejó de estar con sus hermanas. Falin y Mia se quedaron en el círculo, sin saber por dónde empezar.'),
   _chap(8, 'La guardiana del círculo', '🧚',
-      'Maya es una pequeña hada encargada de proteger el círculo central y registrar los cambios del bosque. Conoce muchas reglas, pero no todas: algunas páginas de su diario han desaparecido.'),
+      'Maya es una pequeña hada encargada de proteger el círculo central y registrar los cambios del bosque. Conoce muchas reglas, pero no todas: algunas páginas de su diario han desaparecido.',
+      image: 'assets/images/maya_escena.png'),
   _chap(9, 'El Sendero de las Raíces', '🌱',
       'La conexión con el sendero está demasiado dañada para que crucen las dos hermanas a la vez. Una cruza; la otra mantiene abierto el vínculo desde el círculo.',
+      image: 'assets/images/sendero_de_las_raices.png',
       note: 'Sola en el sendero, quizá. Pero nunca estarán solas mientras crean una en la otra.'),
   _chap(10, 'El rescate', '🔓',
       'La hermana que cruzó asciende por saltos de precisión hasta encontrar a Kiara rodeada de raíces oscuras. Desde el círculo, la otra mantiene la conexión: la luz recorre el sendero, debilita las raíces y libera a Kiara, que reconoce el esfuerzo de ambas.',
