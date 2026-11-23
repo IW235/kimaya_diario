@@ -176,7 +176,7 @@ final kPages = <DiaryPage>[
     title: 'Falin',
     emoji: '🐕',
     image: 'assets/images/retrato_falin.png',
-    heroImage: 'assets/images/personaje_falin.png',
+    heroImage: 'assets/images/falin_escena_nueva.png',
     meta: {
       'Especie': 'Border Collie',
       'Posición': 'La menor de las tres',
@@ -209,7 +209,7 @@ final kPages = <DiaryPage>[
     title: 'Mia',
     emoji: '🐩',
     image: 'assets/images/retrato_mia.png',
-    heroImage: 'assets/images/personaje_mia.png',
+    heroImage: 'assets/images/mia_escena_nueva.png',
     meta: {
       'Especie': 'Schnauzer miniatura',
       'Papel': 'Jugable en la demo',
@@ -241,7 +241,7 @@ final kPages = <DiaryPage>[
     title: 'Kiara',
     emoji: '🐶',
     image: 'assets/images/retrato_kiara.png',
-    heroImage: 'assets/images/personaje_kiara.png',
+    heroImage: 'assets/images/kiara_escena_nueva.png',
     meta: {
       'Especie': 'Schnauzer mediana',
       'Posición': 'La mayor de las tres',
@@ -304,7 +304,7 @@ final kPages = <DiaryPage>[
     title: 'Zarzal Sombrío',
     emoji: '🥀',
     image: 'assets/images/retrato_zarzal_sombrio.png',
-    heroImage: 'assets/images/retrato_zarzal_sombrio.png',
+    heroImage: 'assets/images/zarzal_sombrio_rosa_magenta.png',
     meta: {
       'Clasificación': 'Fenómeno mágico desconocido',
       'Nivel de riesgo': 'Variable',

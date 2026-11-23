@@ -495,10 +495,17 @@ class DetailScreen extends StatelessWidget {
         status: state.statusFor(page) ?? page.meta['Estado'],
       );
     }
-    if (!covered && page.key == 'personaje_maya') {
-      return _MayaDetailScreen(
+    const profilePages = {
+      'personaje_falin',
+      'personaje_mia',
+      'personaje_kiara',
+      'personaje_maya',
+      'personaje_zarzal',
+    };
+    if (!covered && profilePages.contains(page.key)) {
+      return _CharacterDetailScreen(
         page: page,
-        status: state.statusFor(page) ?? 'En el Bosque del Eco',
+        status: state.statusFor(page) ?? 'Disponible',
       );
     }
     final status = state.statusFor(page);
@@ -635,79 +642,108 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
-class _MayaDetailScreen extends StatelessWidget {
-  const _MayaDetailScreen({required this.page, required this.status});
+class _CharacterDetailScreen extends StatelessWidget {
+  const _CharacterDetailScreen({required this.page, required this.status});
 
   final DiaryPage page;
   final String status;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Maya', style: K.title(11, color: K.paper)),
-        ),
-        body: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFFFFF9E8), Color(0xFFF4E3B6)],
-            ),
+  Widget build(BuildContext context) {
+    final heroAsset = page.key == 'personaje_maya'
+        ? 'assets/images/maya_escena.png'
+        : (page.heroImage ?? page.image);
+    final containHero = page.key == 'personaje_zarzal';
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(page.title, style: K.title(11, color: K.paper)),
+      ),
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFFFF9E8), Color(0xFFF4E3B6)],
           ),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 850),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(26),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 838 / 275,
-                          child: Image.asset(
-                            'assets/images/maya_escena.png',
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                            filterQuality: FilterQuality.none,
-                            semanticLabel: 'Maya en el Bosque del Eco',
-                          ),
-                        ),
+        ),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 850),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(26),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              'Maya',
-                              textAlign: TextAlign.center,
-                              style: K.title(18),
+                      child: AspectRatio(
+                        aspectRatio: 838 / 275,
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFF082F2C), Color(0xFF0B5148)],
                             ),
-                            const SizedBox(height: 8),
-                            Center(child: _MayaStatus(status)),
-                            const SizedBox(height: 16),
-                            _MayaProfilePanel(page: page),
-                            if (page.note != null) ...[
-                              const SizedBox(height: 16),
-                              _MayaQuotePanel(text: page.note!),
-                            ],
-                          ],
+                          ),
+                          child: heroAsset == null
+                              ? Center(
+                                  child: Text(
+                                    page.emoji,
+                                    style: const TextStyle(fontSize: 82),
+                                  ),
+                                )
+                              : Image.asset(
+                                  heroAsset,
+                                  fit: containHero
+                                      ? BoxFit.contain
+                                      : BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  filterQuality: FilterQuality.none,
+                                  semanticLabel:
+                                      '${page.title} en el Bosque del Eco',
+                                  errorBuilder: (_, __, ___) => Center(
+                                    child: Text(
+                                      page.emoji,
+                                      style: const TextStyle(fontSize: 82),
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            page.title,
+                            textAlign: TextAlign.center,
+                            style: K.title(18),
+                          ),
+                          const SizedBox(height: 8),
+                          Center(child: _MayaStatus(status)),
+                          const SizedBox(height: 16),
+                          _MayaProfilePanel(page: page),
+                          if (page.note != null) ...[
+                            const SizedBox(height: 16),
+                            _MayaQuotePanel(text: page.note!),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _MayaStatus extends StatelessWidget {
