@@ -480,6 +480,23 @@ class DetailScreen extends StatelessWidget {
     if (!covered && page.key == 'lugar_bosque') {
       return _BosqueEcoScreen(page: page);
     }
+    const redesignedChapters = {
+      'capitulo_01',
+      'capitulo_02',
+      'capitulo_03',
+      'capitulo_04',
+      'capitulo_05',
+      'capitulo_06',
+      'capitulo_07',
+      'capitulo_08',
+      'capitulo_09',
+      'capitulo_10',
+      'capitulo_11',
+      'capitulo_12',
+    };
+    if (!covered && redesignedChapters.contains(page.key)) {
+      return _ChapterDetailScreen(page: page);
+    }
     const illustratedPages = {
       'lugar_circulo_hongos',
       'lugar_circulo_central',
@@ -1509,6 +1526,99 @@ class _ArchivePanel extends StatelessWidget {
             const Divider(color: Color(0xFFD99A22), height: 18),
             child,
           ],
+        ),
+      );
+}
+
+class _ChapterDetailScreen extends StatelessWidget {
+  const _ChapterDetailScreen({required this.page});
+
+  final DiaryPage page;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            '🌿  ${page.title}  🌿',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: K.title(10, color: K.paper),
+          ),
+        ),
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFFFF8E5), Color(0xFFF3DCA4)],
+            ),
+          ),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 30),
+            children: [
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 760),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _ChapterTitlePlate(title: page.title),
+                      const SizedBox(height: 24),
+                      _ForestDescription(text: page.body),
+                      for (final entry in page.lists.entries) ...[
+                        const SizedBox(height: 16),
+                        _ArchiveListPanel(
+                          title: entry.key,
+                          values: entry.value,
+                        ),
+                      ],
+                      if (page.note != null) ...[
+                        const SizedBox(height: 18),
+                        _ForestMayaNote(text: page.note!),
+                      ],
+                      const SizedBox(height: 24),
+                      const Text(
+                        '🌿     ✦     💎     ✦     🌿',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22, color: K.forest),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+}
+
+class _ChapterTitlePlate extends StatelessWidget {
+  const _ChapterTitlePlate({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: const Color(0xFFC98616), width: 2),
+          gradient: const LinearGradient(
+            colors: [Color(0xFFFFF8E4), Color(0xFFF3D898)],
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: K.title(11),
         ),
       );
 }
