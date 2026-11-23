@@ -123,8 +123,9 @@ class JournalHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 7),
                     const _JournalHeaderButton(
-                        label: 'Maya',
-                        image: 'assets/images/maya_retrato_sin_fondo.png'),
+                      label: 'Maya',
+                      emoji: '🧚',
+                    ),
                   ],
                 ),
               ),
