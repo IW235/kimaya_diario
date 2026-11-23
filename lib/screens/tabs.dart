@@ -241,9 +241,17 @@ class _Node extends StatelessWidget {
                   ]
                 : null,
           ),
-          child: Opacity(
+          child: ClipOval(
+            child: Opacity(
               opacity: open ? 1 : .55,
-              child: Text(page.emoji, style: const TextStyle(fontSize: 30))),
+              child: page.image != null
+                  ? Image.asset(page.image!,
+                      width: 66, height: 66, fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          Text(page.emoji, style: const TextStyle(fontSize: 30)))
+                  : Text(page.emoji, style: const TextStyle(fontSize: 30)),
+            ),
+          ),
         ),
         const SizedBox(height: 4),
         Text(page.title,
@@ -314,22 +322,67 @@ class ArchivoTab extends StatelessWidget {
               labelPadding: const EdgeInsets.symmetric(horizontal: 13),
               labelStyle: K.body(11, w: FontWeight.w800),
               tabs: const [
-                Tab(height: 38, text: 'Personajes'),
-                Tab(height: 38, text: 'Lugares'),
-                Tab(height: 38, text: 'Magia y objetos'),
-                Tab(height: 38, text: 'Criaturas'),
+                Tab(
+                  height: 52,
+                  child: _ArchiveTabLabel(
+                    icon: Icons.pets,
+                    label: 'Personajes',
+                  ),
+                ),
+                Tab(
+                  height: 52,
+                  child: _ArchiveTabLabel(
+                    icon: Icons.landscape,
+                    label: 'Lugares',
+                  ),
+                ),
+                Tab(
+                  height: 52,
+                  child: _ArchiveTabLabel(
+                    icon: Icons.auto_awesome,
+                    label: 'Magia y objetos',
+                  ),
+                ),
+                Tab(
+                  height: 52,
+                  child: _ArchiveTabLabel(
+                    icon: Icons.bug_report,
+                    label: 'Criaturas',
+                  ),
+                ),
               ],
             ),
           ),
           Expanded(
             child: TabBarView(children: [
               _list(state.all('personaje')),
-              _list([...state.all('lugar'), ...state.all('region')]),
+              // Lugares ya incluye Bosque, Círculo de hongos, Círculo
+              // central, Sendero, Laguna, Copas y Jardín de la Bruma; no
+              // se mezclan con las regiones del Mundo para no duplicar.
+              _list(state.all('lugar')),
               _list(state.all('magia')),
               _CreaturesArchive(state: state),
             ]),
           ),
         ]),
+      );
+}
+
+class _ArchiveTabLabel extends StatelessWidget {
+  const _ArchiveTabLabel({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(height: 2),
+          Text(label, maxLines: 1),
+        ],
       );
 }
 
