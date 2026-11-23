@@ -489,6 +489,8 @@ class DetailScreen extends StatelessWidget {
     final heading = covered && page.category == 'capitulo'
         ? 'Capítulo ${page.order}'
         : page.title;
+    final coveredImage =
+        page.emblem ?? (page.category == 'criatura' ? page.heroImage : null);
 
     return Scaffold(
       appBar: AppBar(
@@ -514,10 +516,10 @@ class DetailScreen extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: K.magenta, width: 2),
               ),
-              child: page.emblem != null
+              child: coveredImage != null
                   ? ClipOval(
                       child: Image.asset(
-                        page.emblem!,
+                        coveredImage,
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
@@ -549,7 +551,9 @@ class DetailScreen extends StatelessWidget {
         if (covered) ...[
           Cover(
             coverText(page.key),
-            title: page.emblem != null ? page.title : null,
+            title: page.emblem != null || page.category == 'criatura'
+                ? page.title
+                : null,
           ),
           const SizedBox(height: 12),
           if (locked && page.note != null)

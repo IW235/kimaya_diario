@@ -515,7 +515,7 @@ final kPages = <DiaryPage>[
       title: 'Registro incompleto',
       emoji: '🌫️',
       image: 'assets/images/registro_incompleto_01_conejo.png',
-      heroImage: 'assets/images/registro_incompleto_01_conejo.png',
+      heroImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       locked: true),
   const DiaryPage(
       key: 'criatura_2',
@@ -523,7 +523,7 @@ final kPages = <DiaryPage>[
       title: 'Registro incompleto',
       emoji: '🌫️',
       image: 'assets/images/registro_incompleto_02_ave.png',
-      heroImage: 'assets/images/registro_incompleto_02_ave.png',
+      heroImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       locked: true),
   const DiaryPage(
       key: 'criatura_3',
@@ -531,6 +531,6 @@ final kPages = <DiaryPage>[
       title: 'Registro incompleto',
       emoji: '🌫️',
       image: 'assets/images/registro_incompleto_03_lobo.png',
-      heroImage: 'assets/images/registro_incompleto_03_lobo.png',
+      heroImage: 'assets/images/pagina_diario_niebla_lavanda.png',
       locked: true),
 ];
