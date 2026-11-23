@@ -123,8 +123,9 @@ class JournalHeader extends StatelessWidget {
                     ),
                     const SizedBox(width: 7),
                     const _JournalHeaderButton(
-                        label: 'Maya',
-                        image: 'assets/images/maya_retrato_sin_fondo.png'),
+                      label: 'Maya',
+                      emoji: '🧚',
+                    ),
                   ],
                 ),
               ),
@@ -140,9 +141,10 @@ class _JournalHeaderButton extends StatelessWidget {
   const _JournalHeaderButton({
     required this.label,
     this.icon,
+    this.emoji,
     this.image,
     this.onTap,
-  }) : emoji = null;
+  });
 
   final String label;
   final IconData? icon;
