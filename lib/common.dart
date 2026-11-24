@@ -531,8 +531,9 @@ class DetailScreen extends StatelessWidget {
     final heading = covered && page.category == 'capitulo'
         ? 'Capítulo ${page.order}'
         : page.title;
-    final coveredImage =
-        page.emblem ?? (page.category == 'criatura' ? page.heroImage : null);
+    final coveredImage = page.lockedThumbnailImage ??
+        page.emblem ??
+        (page.category == 'criatura' ? page.heroImage : null);
 
     return Scaffold(
       appBar: AppBar(
@@ -593,7 +594,9 @@ class DetailScreen extends StatelessWidget {
         if (covered) ...[
           Cover(
             coverText(page.key),
-            title: page.emblem != null || page.category == 'criatura'
+            title: page.lockedThumbnailImage != null ||
+                    page.emblem != null ||
+                    page.category == 'criatura'
                 ? page.title
                 : null,
           ),

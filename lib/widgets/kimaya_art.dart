@@ -112,7 +112,7 @@ class JournalHeader extends StatelessWidget {
                     'Diario del Bosque. Archivo de Maya, volumen uno',
               ),
               Positioned(
-                top: (height - 42) / 2,
+                top: 8,
                 right: 10,
                 child: Row(
                   children: [
@@ -142,9 +142,8 @@ class _JournalHeaderButton extends StatelessWidget {
     required this.label,
     this.icon,
     this.emoji,
-    this.image,
     this.onTap,
-  });
+  }) : image = null;
 
   final String label;
   final IconData? icon;
